@@ -6,9 +6,13 @@ const path = require("node:path");
 
 async function mcActivityRoutes(fastify, opts) {
   fastify.post("/mc/activity/execute2", async (request, reply) => {
+    // decode data
+    const data = JWT(request?.body);
+    logger.info(data);
+
     try {
       // Marketing Cloud envía los argumentos dentro de inArguments
-      const args = request.body?.inArguments?.[0] || {};
+      const args = data?.inArguments?.[0] || {};
       logger.info({ args }, "Argumentos dentro de inArguments");
       const { telefono, texto } = args;
 
