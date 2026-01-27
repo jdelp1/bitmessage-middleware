@@ -39,6 +39,7 @@ async function mcActivityRoutes(fastify, opts) {
       return reply.status(200).send({});
     } catch (err) {
       console.error("Error ejecutando Custom Activity:", err);
+      logger.info(err, "Error ejecutando Custom Activity:");
       return reply.status(500).send({
         error: "Error ejecutando Custom Activity",
         details: err.message || err.toString(),
