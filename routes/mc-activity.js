@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 async function mcActivityRoutes(fastify, opts) {
-  fastify.post("/mc/activity/execute", async (request, reply) => {
+  fastify.post("/mc/activity/execute2", async (request, reply) => {
     try {
       // Marketing Cloud envía los argumentos dentro de inArguments
       const args = request.body?.inArguments?.[0] || {};
