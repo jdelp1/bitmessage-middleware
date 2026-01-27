@@ -1,0 +1,64 @@
+{
+  "workflowApiVersion": "1.1",
+  "metaData": {
+    "icon": "images/icon.png",
+    "category": "message"
+  },
+  "type": "REST",
+  "lang": {
+    "en-US": {
+      "name": "Send SMS via Middleware",
+      "description": "Custom Activity to send SMS through your middleware"
+    }
+  },
+  "arguments": {
+    "execute": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/execute",
+      "verb": "POST",
+      "inArguments": [],
+      "outArguments": [],
+      "header": {
+        "Content-Type": "application/json"
+      }
+    },
+    "save": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/save",
+      "verb": "POST",
+      "body": "{}",
+      "header": {
+        "Content-Type": "application/json"
+      }
+    },
+    "validate": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/validate",
+      "verb": "POST",
+      "body": "{}",
+      "header": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "configurationArguments": {
+    "publish": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/publish",
+      "verb": "POST",
+      "header": {
+        "Content-Type": "application/json"
+      }
+    },
+    "edit": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/edit",
+      "verb": "POST",
+      "header": {
+        "Content-Type": "application/json"
+      }
+    },
+    "stop": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/stop",
+      "verb": "POST",
+      "header": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}
