@@ -42,7 +42,7 @@
     "configModal": {
       "height": 600,
       "width": 800,
-      "fullscreen": false,
+      "fullscreen": true,
       "url": "https://bitmessage-middleware.onrender.com/index.html"
     }
   }
