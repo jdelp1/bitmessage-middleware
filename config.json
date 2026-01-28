@@ -3,8 +3,7 @@
   "type": "REST",
   "metaData": {
     "icon": "images/icon.png",
-    "category": "message",
-    "isConfigured": true
+    "category": "message"
   },
   "lang": {
     "en-US": {
@@ -44,20 +43,15 @@
   "wizardSteps": [
     {
       "label": "Configurar SMS",
-      "key": "step1",
-      "active": true
+      "key": "step1"
     }
   ],
   "userInterfaces": {
-    "configurationSupportsReadOnlyMode": true,
     "configModal": {
       "url": "index.html",
       "height": 500,
       "width": 500
     }
-  },
-  "configInspector": {
-    "size": "scm-lg"
   },
   "edit": {
     "url": "index.html",
