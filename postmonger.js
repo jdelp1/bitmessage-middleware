@@ -80,13 +80,20 @@ function onClickedNext() {
     return;
   }
 
-  if (message.length > 100) {
-    alert("El mensaje no puede tener más de 100 caracteres.");
+  if (message.length > 160) {
+    alert("El mensaje no puede tener más de 160 caracteres.");
     return;
   }
 
-  // Update payload with the message
-  payload.inArguments = [{ texto: message }];
+  // Update payload with both telefono and texto
+  // telefono comes from Journey Builder contact data
+  // texto is what user configures here
+  payload.inArguments = [
+    {
+      telefono: "{{Contact.Attribute.EntrySource.Telefono}}",
+      texto: message
+    }
+  ];
   
   if (!payload.metaData) {
     payload.metaData = {};
@@ -125,34 +132,15 @@ function onGotoStep(step) {
  */
 function setupUI() {
   const messageTextarea = document.getElementById("message");
-  const sendButton = document.getElementById("sendButton");
   const charCounter = document.getElementById("charCounter");
 
-  if (!messageTextarea || !sendButton || !charCounter) {
+  if (!messageTextarea || !charCounter) {
     console.error("UI elements not found");
     return;
   }
 
   // Character counter functionality
   messageTextarea.addEventListener("input", updateCharCounter);
-
-  // Send button - calls the execute endpoint
-  sendButton.addEventListener("click", function () {
-    const message = messageTextarea.value.trim();
-
-    if (!message || message.length === 0) {
-      alert("Por favor, escribe un mensaje antes de enviar.");
-      return;
-    }
-
-    if (message.length > 100) {
-      alert("El mensaje no puede tener más de 100 caracteres.");
-      return;
-    }
-
-    // Call the execute endpoint
-    sendMessage(message);
-  });
 
   // Initialize counter
   updateCharCounter();
@@ -164,10 +152,11 @@ function setupUI() {
 function updateCharCounter() {
   const messageTextarea = document.getElementById("message");
   const charCounter = document.getElementById("charCounter");
-  const sendButton = document.getElementById("sendButton");
+
+  if (!messageTextarea || !charCounter) return;
 
   const currentLength = messageTextarea.value.length;
-  const maxLength = 100;
+  const maxLength = 160;
 
   charCounter.textContent = `${currentLength} / ${maxLength}`;
 
@@ -175,47 +164,8 @@ function updateCharCounter() {
   charCounter.classList.remove("warning", "error");
   if (currentLength >= maxLength) {
     charCounter.classList.add("error");
-  } else if (currentLength >= 80) {
+  } else if (currentLength >= 128) {
     charCounter.classList.add("warning");
   }
 
-  // Enable/disable button
-  sendButton.disabled = currentLength === 0;
-}
-
-/**
- * Send message to the execute endpoint
- */
-function sendMessage(message) {
-  fetch("/mc/activity/execute", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      inArguments: [
-        {
-          texto: message,
-        },
-      ],
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Mensaje enviado exitosamente:", data);
-      alert("Mensaje enviado correctamente!");
-
-      // Clear the textarea after successful send
-      document.getElementById("message").value = "";
-      updateCharCounter();
-    })
-    .catch((error) => {
-      console.error("Error al enviar mensaje:", error);
-      alert("Error al enviar el mensaje. Por favor, intenta de nuevo.");
-    });
 }

@@ -9,9 +9,9 @@ const options = {}
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
 
-  // Register static file serving for the public directory
+  // Register static file serving for the root directory
   fastify.register(require('@fastify/static'), {
-    root: path.join(__dirname, 'public'),
+    root: __dirname,
     prefix: '/' // files will be served from root URL
   })
 
