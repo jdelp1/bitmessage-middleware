@@ -53,5 +53,10 @@
       "width": 500
     }
   },
-  "wizardSteps": []
+  "wizardSteps": [
+    {
+      "label": "Configurar SMS",
+      "key": "step1"
+    }
+  ]
 }
