@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Enviar SMS 1 a 1</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .message-container {
+        margin-top: 20px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+      }
+      .char-counter {
+        text-align: right;
+        margin-top: 5px;
+        font-size: 12px;
+        color: #666;
+      }
+      .char-counter.warning {
+        color: #ff6600;
+      }
+      .char-counter.error {
+        color: #ff0000;
+      }
+      .send-button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .send-button:hover {
+        background-color: #0056b3;
+      }
+      .send-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Enviar SMS (BitMessage) 1 a 1</h3>
+    <p>Esta actividad no requiere configuración.</p>
+    <p>Los datos se reciben automáticamente desde Journey Builder.</p>
+    
+    <div class="message-container">
+      <label for="message">Mensaje (máximo 100 caracteres):</label>
+      <textarea id="message" maxlength="100" placeholder="Escribe tu mensaje aquí..."></textarea>
+      <div class="char-counter" id="charCounter">0 / 100</div>
+      <button class="send-button" id="sendButton">Test</button>
+    </div>
+
+    <!-- Postmonger library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/postmonger@2.0.0/postmonger.min.js"></script>
+    <!-- Custom activity logic -->
+    <script src="postmonger.js"></script>
+  </body>
+</html>

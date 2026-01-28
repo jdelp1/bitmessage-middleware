@@ -1,0 +1,57 @@
+{
+  "workflowApiVersion": "1.1",
+  "type": "REST",
+  "metaData": {
+    "icon": "images/icon.png",
+    "category": "message",
+    "isConfigured": true
+  },
+  "lang": {
+    "en-US": {
+      "name": "Enviar SMS (Middleware)",
+      "description": "Envía SMS 1 a 1 usando BitMessage vía middleware"
+    }
+  },
+  "arguments": {
+    "execute": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/execute",
+      "verb": "POST",
+      "timeout": 30000,
+      "retryCount": 0,
+      "retryDelay": 0,
+      "inArguments": [
+        {
+          "telefono": "{{Contact.Attribute.EntrySource.Telefono}}",
+          "texto": "{{Contact.Attribute.EntrySource.Texto}}"
+        }
+      ],
+      "outArguments": []
+    }
+  },
+  "configurationArguments": {
+    "save": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/save",
+      "verb": "POST"
+    },
+    "publish": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/publish",
+      "verb": "POST"
+    },
+    "validate": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/validate",
+      "verb": "POST"
+    },
+    "stop": {
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/stop",
+      "verb": "POST"
+    }
+  },
+  "userInterfaces": {
+    "configModal": {
+      "url": "index.html",
+      "height": 300,
+      "width": 500
+    }
+  },
+  "wizardSteps": []
+}
