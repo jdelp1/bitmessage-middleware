@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Local",
+            "program": "${workspaceFolder}\\app.js",
+            "env": {
+                "requestBin":"YOUR_MOCK_API_REQUEST_HERE",
+                "jwtSecret":"THE_JWT_FROM_YOUR_PACKAGE_HERE"
+            }
+        }
+    ]
+}
