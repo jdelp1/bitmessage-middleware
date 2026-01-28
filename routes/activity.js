@@ -42,7 +42,10 @@ async function routes(fastify) {
   });
 
   // Endpoints obligatorios del lifecycle
-  fastify.post("/mc/activity/save", async () => ({}));
+  fastify.post("/mc/activity/save", async (request, reply) => {
+    logger.info({ body: request.body }, "Save endpoint called");
+    return {};
+  });
   fastify.post("/mc/activity/validate", async () => ({}));
   fastify.post("/mc/activity/publish", async () => ({}));
   fastify.post("/mc/activity/stop", async () => ({}));
