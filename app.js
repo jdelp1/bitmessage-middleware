@@ -20,6 +20,14 @@ app.use(bodyParser.raw({type: 'application/jwt'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Prevent caching of static files
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Express in Development Mode

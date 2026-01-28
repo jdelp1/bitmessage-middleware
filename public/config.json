@@ -3,7 +3,7 @@
     "metaData": {
         "icon": "images/icon.png",
         "iconSmall": "images/iconSmall.png",
-        "category": "message"
+        "category": "message v 2.0"
     },
     "type": "RESTDECISION",
     "lang": {

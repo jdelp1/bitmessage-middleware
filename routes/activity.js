@@ -7,6 +7,11 @@ import JWT from '../lib/jwtDecoder.js';
  * POST Handler for /execute/ route of Activity.
  */
 export async function execute(req, res) {
+    // Prevent caching
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    
     try {
         // example on how to decode JWT
         JWT(req.body, process.env.jwtSecret, async (err, decoded) => {
@@ -53,6 +58,11 @@ export async function execute(req, res) {
  * POST Handler for /publish/ route of Activity.
  */
 export async function publish(req, res) {
+    // Prevent caching
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    
     console.log(`Publish Event: ${req.body.toString('utf8')}`);
     res.send(200, 'Publish');
 };
@@ -61,6 +71,11 @@ export async function publish(req, res) {
  * POST Handler for /validate/ route of Activity.
  */
 export async function validate(req, res) {
+    // Prevent caching
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    
     console.log(`Validate Event: ${req.body.toString('utf8')}`);
     res.send(200, 'Validate');
 };
@@ -70,6 +85,11 @@ export async function validate(req, res) {
  * POST Handler for / route of Activity (this is the edit route).
  */
 export async function edit(req, res) {
+    // Prevent caching
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    
     console.log(`Edit Event: ${req.body.toString('utf8')}`);
     res.send(200, 'Edit');
 };
@@ -78,6 +98,11 @@ export async function edit(req, res) {
  * POST Handler for /save/ route of Activity.
  */
 export async function save(req, res) {
+    // Prevent caching
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    
     console.log(`Save Event: ${req.body.toString('utf8')}`);
     res.send(200, 'Save');
 };
