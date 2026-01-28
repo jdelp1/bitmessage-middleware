@@ -91,9 +91,9 @@ define(["postmonger"], function (Postmonger) {
       $("#message").html(message);
       showStep(null, 3);
     }
-
-    // Signal that the activity is fully initialized and ready to be shown
-    connection.trigger('ready');
+    
+    // Tell JB that the custom activity is done initializing and ready to display
+    connection.trigger("ready");
   }
 
   function onGetTokens(tokens) {

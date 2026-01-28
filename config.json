@@ -42,10 +42,8 @@
     "configModal": {
       "height": 600,
       "width": 800,
-      "fullscreen": false
+      "fullscreen": false,
+      "url": "https://bitmessage-middleware.onrender.com/index.html"
     }
-  },
-  "edit": {
-    "url": "https://bitmessage-middleware.onrender.com/index.html"
   }
 }
