@@ -18,6 +18,17 @@
         require(config, dependencies);
       })();
     </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var connection = new Postmonger.Session();
+
+        connection.on("initActivity", function (data) {
+          console.log("initActivity", data);
+        });
+
+        connection.trigger("ready");
+      });
+    </script>
 
     <!--Styles-->
     <style type="text/css">
