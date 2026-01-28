@@ -46,17 +46,27 @@
       "verb": "POST"
     }
   },
-  "userInterfaces": {
-    "configModal": {
-      "url": "index.html",
-      "height": 300,
-      "width": 500
-    }
-  },
   "wizardSteps": [
     {
       "label": "Configurar SMS",
-      "key": "step1"
+      "key": "step1",
+      "active": true
     }
-  ]
+  ],
+  "userInterfaces": {
+    "configurationSupportsReadOnlyMode": true,
+    "configModal": {
+      "url": "index.html",
+      "height": 500,
+      "width": 500
+    }
+  },
+  "configInspector": {
+    "size": "scm-lg"
+  },
+  "edit": {
+    "url": "index.html",
+    "height": 500,
+    "width": 500
+  }
 }
