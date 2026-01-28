@@ -7,84 +7,45 @@
   "type": "REST",
   "lang": {
     "en-US": {
-      "name": "REST Activity (Workflow API v1.1)",
-      "description": "An example REST activity using workflow API v1.1 format."
+      "name": "SMS Activity (BitMessage)",
+      "description": "Send SMS messages via BitMessage middleware with multi-step configuration."
     }
   },
   "arguments": {
     "execute": {
-      "inArguments": [
-        {
-          "emailAddress": "{{InteractionDefaults.Email}}"
-        },
-        {
-          "phoneNumber": "{{Contact.Default.PhoneNumber}}"
-        }
-      ],
-      "outArguments": [
-        {
-          "foundSignupDate": ""
-        }
-      ],
-      "url": "https://some-endpoint.com/execute"
+      "inArguments": [],
+      "outArguments": [],
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/execute"
     }
   },
   "configurationArguments": {
     "save": {
-      "url": "URI/for/your/activity/save"
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/save"
     },
     "publish": {
-      "url": "URI/for/your/activity/publish"
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/publish"
     },
     "validate": {
-      "url": "URI/for/your/activity/validate"
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/validate"
     },
     "stop": {
-      "url": "URI/for/your/activity/stop"
+      "url": "https://bitmessage-middleware.onrender.com/mc/activity/stop"
     }
   },
   "wizardSteps": [
-    { "label": "Step 1", "key": "step1" },
-    { "label": "Step 2", "key": "step2" },
-    { "label": "Step 3", "key": "step3" },
-    { "label": "Step 4", "key": "step4", "active": false }
+    { "label": "Seleccionar Mensaje", "key": "step1" },
+    { "label": "Información", "key": "step2" },
+    { "label": "Resumen", "key": "step3" },
+    { "label": "Paso Opcional", "key": "step4", "active": false }
   ],
   "userInterfaces": {
     "configModal": {
-      "height": 200,
-      "width": 300,
-      "fullscreen": true
+      "height": 600,
+      "width": 800,
+      "fullscreen": false
     }
   },
-  "schema": {
-    "arguments": {
-      "execute": {
-        "inArguments": [
-          {
-            "phoneNumber": {
-              "dataType": "Phone",
-              "isNullable": false,
-              "direction": "in"
-            }
-          },
-          {
-            "emailAddress": {
-              "dataType": "Email",
-              "isNullable": false,
-              "direction": "in"
-            }
-          }
-        ],
-        "outArguments": [
-          {
-            "foundSignupDate": {
-              "dataType": "Date",
-              "direction": "out",
-              "access": "visible"
-            }
-          }
-        ]
-      }
-    }
+  "edit": {
+    "url": "https://bitmessage-middleware.onrender.com/index.html"
   }
 }

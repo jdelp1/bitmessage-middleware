@@ -14,7 +14,7 @@ define(["postmonger"], function (Postmonger) {
   var currentStep = steps[0].key;
 
   $(window).ready(onRender);
-
+  connection.trigger("ready");
   connection.on("initActivity", initialize);
   connection.on("requestedTokens", onGetTokens);
   connection.on("requestedEndpoints", onGetEndpoints);
