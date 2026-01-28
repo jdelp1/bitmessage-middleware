@@ -1,9 +1,9 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Custom Journey Builder Activity</title>
+    <title>Configuración de SMS - BitMessage</title>
 
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/require.js"></script>
@@ -24,6 +24,7 @@
       body {
         padding: 20px;
         margin: 0;
+        font-family: Arial, sans-serif;
       }
       .step {
         display: none;
@@ -31,31 +32,72 @@
       #step1 {
         display: block;
       }
+      select {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        margin: 10px 0;
+      }
+      button {
+        margin-top: 15px;
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      #message {
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+      h3 {
+        margin-top: 0;
+      }
     </style>
   </head>
   <body>
     <div id="step1" class="step">
-      Select your SMS message:
+      <h3>Paso 1: Seleccionar Mensaje SMS</h3>
+      <p>Elige el mensaje que deseas enviar:</p>
       <select id="select1">
-        <option value="">Select an option</option>
-        <option value="someMessage">Some SMS</option>
-        <option value="anotherMessage">Another SMS</option>
-        <option value="thirdMessage">Third SMS</option>
-        <option value="unknownMessage">Unknown SMS</option>
+        <option value="">Selecciona una opción</option>
+        <option value="Hola, tienes una nueva notificación">
+          Notificación general
+        </option>
+        <option value="Tu pedido ha sido enviado">Confirmación de envío</option>
+        <option value="Recordatorio: tienes una cita pendiente">
+          Recordatorio de cita
+        </option>
+        <option value="Gracias por tu compra">Agradecimiento</option>
       </select>
 
-      <button id="toggleLastStep">Toggle Last Step</button>
+      <button id="toggleLastStep">Mostrar/Ocultar Paso Opcional</button>
     </div>
     <div id="step2" class="step">
-      Here's a second page with some info on it.
+      <h3>Paso 2: Información</h3>
+      <p>Este SMS será enviado a través de BitMessage middleware.</p>
+      <p>
+        El número de teléfono se obtendrá automáticamente del contacto en
+        Journey Builder.
+      </p>
     </div>
     <div id="step3" class="step">
-      You chose the message:
+      <h3>Paso 3: Resumen</h3>
+      <p>Has elegido el siguiente mensaje:</p>
       <div id="message"></div>
     </div>
     <div id="step4" class="step">
-      Hey, here's a fourth step, just for you. Toggle this on or off from step
-      1.
+      <h3>Paso 4: Configuración Adicional (Opcional)</h3>
+      <p>Aquí podrías agregar configuraciones adicionales para el SMS.</p>
+      <p>Este paso puede activarse/desactivarse desde el Paso 1.</p>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/postmonger@0.0.16/postmonger.js"></script>
   </body>
 </html>

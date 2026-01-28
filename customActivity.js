@@ -6,10 +6,10 @@ define(["postmonger"], function (Postmonger) {
   var lastStepEnabled = false;
   var steps = [
     // initialize to the same value as what's set in config.json for consistency
-    { label: "Step 1", key: "step1" },
-    { label: "Step 2", key: "step2" },
-    { label: "Step 3", key: "step3" },
-    { label: "Step 4", key: "step4", active: false },
+    { label: "Seleccionar Mensaje", key: "step1" },
+    { label: "Información", key: "step2" },
+    { label: "Resumen", key: "step3" },
+    { label: "Paso Opcional", key: "step4", active: false },
   ];
   var currentStep = steps[0].key;
 
@@ -52,6 +52,9 @@ define(["postmonger"], function (Postmonger) {
   }
 
   function initialize(data) {
+    console.log("*** initActivity ***");
+    console.log(data);
+    
     if (data) {
       payload = data;
     }
@@ -70,7 +73,7 @@ define(["postmonger"], function (Postmonger) {
 
     $.each(inArguments, function (index, inArgument) {
       $.each(inArgument, function (key, val) {
-        if (key === "message") {
+        if (key === "texto") {
           message = val;
         }
       });
@@ -83,7 +86,7 @@ define(["postmonger"], function (Postmonger) {
       // If there is a message, skip to the summary step
     } else {
       $("#select1")
-        .find("option[value=" + message + "]")
+        .find("option[value='" + message + "']")
         .attr("selected", "selected");
       $("#message").html(message);
       showStep(null, 3);
@@ -91,13 +94,13 @@ define(["postmonger"], function (Postmonger) {
   }
 
   function onGetTokens(tokens) {
-    // Response: tokens = { token: <legacy token>, fuel2token: <fuel api token> }
-    // console.log(tokens);
+    console.log("*** Tokens received ***");
+    console.log(tokens);
   }
 
   function onGetEndpoints(endpoints) {
-    // Response: endpoints = { restHost: <url> } i.e. "rest.s1.qa1.exacttarget.com"
-    // console.log(endpoints);
+    console.log("*** Endpoints received ***");
+    console.log(endpoints);
   }
 
   function onClickedNext() {
@@ -183,20 +186,34 @@ define(["postmonger"], function (Postmonger) {
     var name = $("#select1").find("option:selected").html();
     var value = getMessage();
 
+    console.log("*** Saving activity ***");
+    console.log("Message:", value);
+
     // 'payload' is initialized on 'initActivity' above.
     // Journey Builder sends an initial payload with defaults
     // set by this activity's config.json file.  Any property
     // may be overridden as desired.
-    payload.name = name;
+    payload.name = "SMS: " + name;
 
-    payload["arguments"].execute.inArguments = [{ message: value }];
+    // Save with telefono and texto to match backend expectations
+    payload["arguments"].execute.inArguments = [
+      {
+        telefono: "{{Contact.Attribute.EntrySource.Telefono}}",
+        texto: value
+      }
+    ];
 
     payload["metaData"].isConfigured = true;
+
+    console.log("Triggering updateActivity with payload:");
+    console.log(JSON.stringify(payload, null, 2));
 
     connection.trigger("updateActivity", payload);
   }
 
   function getMessage() {
     return $("#select1").find("option:selected").attr("value").trim();
+  }
+});
   }
 });
