@@ -1,26 +1,40 @@
 "use strict";
 
 const JWT = require("../utils/jwtDecoder");
+const logger = require("../utils/logger");
 
 async function routes(fastify) {
   fastify.post("/mc/activity/execute", async (request, reply) => {
-    // decode data
-    const data = JWT(request?.body);
-    logger.info(data);
-
     try {
-      const args = data?.inArguments?.[0] || {};
-      const { telefono, texto } = args;
+      // Check if request body is JWT encoded (from Journey Builder)
+      let args;
+      logger.info({ body: request.body }, "Request body received");
 
-      if (!telefono || !texto) {
-        return reply.code(400).send({ error: "telefono y texto requeridos" });
+      if (request?.body?.toString && request.body.toString().includes(".")) {
+        // JWT encoded data from Journey Builder
+        const data = JWT(request?.body);
+        fastify.log.info({ data }, "JWT decoded data");
+        args = data?.inArguments?.[0] || {};
+      } else {
+        // Regular JSON from frontend
+        args = request?.body?.inArguments?.[0] || {};
       }
 
-      // Aquí se llamaría a tu middleware real si fuese necesario
-      // En este caso, Journey solo espera 200 OK
-      fastify.log.info({ telefono, texto }, "SMS recibido desde Journey");
+      const { telefono, texto } = args;
+      logger.info({ args }, "Argumentos dentro de inArguments");
 
-      return reply.code(200).send({});
+      if (!texto) {
+        return reply.code(400).send({ error: "texto requerido" });
+      }
+
+      // Log the received message
+      logger.info({ telefono, texto }, "Mensaje recibido");
+
+      // Here you would call your actual service if needed
+      // For now, just return success
+      return reply
+        .code(200)
+        .send({ success: true, message: "Mensaje procesado correctamente" });
     } catch (e) {
       fastify.log.error(e);
       return reply.code(500).send({ error: "Error ejecutando actividad" });

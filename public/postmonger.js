@@ -114,7 +114,7 @@ function setupUI() {
   // Character counter functionality
   messageTextarea.addEventListener("input", updateCharCounter);
 
-  // Send button for testing (outside Journey Builder)
+  // Send button - calls the execute endpoint
   sendButton.addEventListener("click", function () {
     const message = messageTextarea.value.trim();
 
@@ -128,8 +128,8 @@ function setupUI() {
       return;
     }
 
-    console.log("Test mode - Mensaje:", message);
-    alert("Modo de prueba. En Journey Builder, usa el botón 'Done'.");
+    // Call the execute endpoint
+    sendMessage(message);
   });
 
   // Initialize counter
@@ -159,4 +159,41 @@ function updateCharCounter() {
 
   // Enable/disable button
   sendButton.disabled = currentLength === 0;
+}
+
+/**
+ * Send message to the execute endpoint
+ */
+function sendMessage(message) {
+  fetch("/mc/activity/execute", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      inArguments: [
+        {
+          texto: message,
+        },
+      ],
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Mensaje enviado exitosamente:", data);
+      alert("Mensaje enviado correctamente!");
+
+      // Clear the textarea after successful send
+      document.getElementById("message").value = "";
+      updateCharCounter();
+    })
+    .catch((error) => {
+      console.error("Error al enviar mensaje:", error);
+      alert("Error al enviar el mensaje. Por favor, intenta de nuevo.");
+    });
 }
