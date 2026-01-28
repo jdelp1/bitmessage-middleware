@@ -4,30 +4,23 @@
   <head>
     <meta charset="utf-8" />
     <title>Configuración de SMS - BitMessage</title>
-    <script src="https://cdn.jsdelivr.net/npm/postmonger@0.0.16/postmonger.js"></script>
+
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/require.js"></script>
     <script type="text/javascript">
       (function () {
         var config = {
           baseUrl: "",
+          paths: {
+            postmonger:
+              "https://cdn.jsdelivr.net/npm/postmonger@0.0.16/postmonger.min",
+          },
         };
 
         var dependencies = ["customActivity"];
 
         require(config, dependencies);
       })();
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var connection = new Postmonger.Session();
-
-        connection.on("initActivity", function (data) {
-          console.log("initActivity", data);
-        });
-
-        connection.trigger("ready");
-      });
     </script>
 
     <!--Styles-->
@@ -109,6 +102,5 @@
       <p>Aquí podrías agregar configuraciones adicionales para el SMS.</p>
       <p>Este paso puede activarse/desactivarse desde el Paso 1.</p>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/postmonger@0.0.16/postmonger.js"></script>
   </body>
 </html>
