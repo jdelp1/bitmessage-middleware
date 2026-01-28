@@ -54,7 +54,7 @@ define(["postmonger"], function (Postmonger) {
   function initialize(data) {
     console.log("*** initActivity ***");
     console.log(data);
-    
+
     if (data) {
       payload = data;
     }
@@ -199,8 +199,8 @@ define(["postmonger"], function (Postmonger) {
     payload["arguments"].execute.inArguments = [
       {
         telefono: "{{Contact.Attribute.EntrySource.Telefono}}",
-        texto: value
-      }
+        texto: value,
+      },
     ];
 
     payload["metaData"].isConfigured = true;
@@ -213,7 +213,5 @@ define(["postmonger"], function (Postmonger) {
 
   function getMessage() {
     return $("#select1").find("option:selected").attr("value").trim();
-  }
-});
   }
 });
