@@ -43,19 +43,19 @@ async function routes(fastify) {
 
   // Endpoints obligatorios del lifecycle
   fastify.post("/mc/activity/save", async (request, reply) => {
-    logger.info({ body: request.body }, "Save endpoint called");
+    logger.info({ body: request.body || {} }, "Save endpoint called");
     return {};
   });
   fastify.post("/mc/activity/validate", async (request, reply) => {
-    logger.info({ body: request.body }, "Validate endpoint called");
+    logger.info({ body: request.body || {} }, "Validate endpoint called");
     return {};
   });
   fastify.post("/mc/activity/publish", async (request, reply) => {
-    logger.info({ body: request.body }, "Publish endpoint called");
+    logger.info({ body: request.body || {} }, "Publish endpoint called");
     return {};
   });
   fastify.post("/mc/activity/stop", async (request, reply) => {
-    logger.info({ body: request.body }, "Stop endpoint called");
+    logger.info({ body: request.body || {} }, "Stop endpoint called");
     return {};
   });
 }
