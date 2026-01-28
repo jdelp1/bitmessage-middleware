@@ -46,9 +46,18 @@ async function routes(fastify) {
     logger.info({ body: request.body }, "Save endpoint called");
     return {};
   });
-  fastify.post("/mc/activity/validate", async () => ({}));
-  fastify.post("/mc/activity/publish", async () => ({}));
-  fastify.post("/mc/activity/stop", async () => ({}));
+  fastify.post("/mc/activity/validate", async (request, reply) => {
+    logger.info({ body: request.body }, "Validate endpoint called");
+    return {};
+  });
+  fastify.post("/mc/activity/publish", async (request, reply) => {
+    logger.info({ body: request.body }, "Publish endpoint called");
+    return {};
+  });
+  fastify.post("/mc/activity/stop", async (request, reply) => {
+    logger.info({ body: request.body }, "Stop endpoint called");
+    return {};
+  });
 }
 
 module.exports = routes;
