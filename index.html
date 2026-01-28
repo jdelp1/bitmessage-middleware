@@ -1,70 +1,61 @@
 <!doctype html>
-<html lang="es">
+
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <title>Enviar SMS 1 a 1</title>
-    <style>
+    <meta charset="utf-8" />
+    <title>Custom Journey Builder Activity</title>
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/require.js"></script>
+    <script type="text/javascript">
+      (function () {
+        var config = {
+          baseUrl: "",
+        };
+
+        var dependencies = ["customActivity"];
+
+        require(config, dependencies);
+      })();
+    </script>
+
+    <!--Styles-->
+    <style type="text/css">
       body {
-        font-family: Arial, sans-serif;
         padding: 20px;
+        margin: 0;
       }
-      .message-container {
-        margin-top: 20px;
+      .step {
+        display: none;
       }
-      textarea {
-        width: 100%;
-        min-height: 100px;
-        padding: 10px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        resize: vertical;
-      }
-      .char-counter {
-        text-align: right;
-        margin-top: 5px;
-        font-size: 12px;
-        color: #666;
-      }
-      .char-counter.warning {
-        color: #ff6600;
-      }
-      .char-counter.error {
-        color: #ff0000;
-      }
-      .send-button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .send-button:hover {
-        background-color: #0056b3;
-      }
-      .send-button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
+      #step1 {
+        display: block;
       }
     </style>
   </head>
   <body>
-    <h3>Configurar Mensaje SMS</h3>
-    <p>Escribe el mensaje que se enviará a cada contacto.</p>
-    <p>El número de teléfono se obtendrá automáticamente del contacto en Journey Builder.</p>
-    
-    <div class="message-container">
-      <label for="message">Mensaje (máximo 160 caracteres):</label>
-      <textarea id="message" maxlength="160" placeholder="Escribe tu mensaje aquí..."></textarea>
-      <div class="char-counter" id="charCounter">0 / 160</div>
-    </div>
+    <div id="step1" class="step">
+      Select your SMS message:
+      <select id="select1">
+        <option value="">Select an option</option>
+        <option value="someMessage">Some SMS</option>
+        <option value="anotherMessage">Another SMS</option>
+        <option value="thirdMessage">Third SMS</option>
+        <option value="unknownMessage">Unknown SMS</option>
+      </select>
 
-    <!-- Postmonger library from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/postmonger@0.0.16/postmonger.js"></script>
-    <!-- Custom activity logic -->
-    <script src="postmonger.js"></script>
+      <button id="toggleLastStep">Toggle Last Step</button>
+    </div>
+    <div id="step2" class="step">
+      Here's a second page with some info on it.
+    </div>
+    <div id="step3" class="step">
+      You chose the message:
+      <div id="message"></div>
+    </div>
+    <div id="step4" class="step">
+      Hey, here's a fourth step, just for you. Toggle this on or off from step
+      1.
+    </div>
   </body>
 </html>

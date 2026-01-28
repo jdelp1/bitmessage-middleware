@@ -1,55 +1,90 @@
 {
   "workflowApiVersion": "1.1",
-  "type": "REST",
   "metaData": {
     "icon": "images/icon.png",
     "category": "message"
   },
+  "type": "REST",
   "lang": {
     "en-US": {
-      "name": "Enviar SMS (Middleware)",
-      "description": "Envía SMS 1 a 1 usando BitMessage vía middleware"
+      "name": "REST Activity (Workflow API v1.1)",
+      "description": "An example REST activity using workflow API v1.1 format."
     }
   },
   "arguments": {
     "execute": {
-      "url": "https://bitmessage-middleware.onrender.com/mc/activity/execute",
-      "verb": "POST",
-      "timeout": 30000,
-      "retryCount": 0,
-      "retryDelay": 0,
-      "inArguments": [],
-      "outArguments": []
+      "inArguments": [
+        {
+          "emailAddress": "{{InteractionDefaults.Email}}"
+        },
+        {
+          "phoneNumber": "{{Contact.Default.PhoneNumber}}"
+        }
+      ],
+      "outArguments": [
+        {
+          "foundSignupDate": ""
+        }
+      ],
+      "url": "https://some-endpoint.com/execute"
     }
   },
   "configurationArguments": {
     "save": {
-      "url": "https://bitmessage-middleware.onrender.com/mc/activity/save",
-      "verb": "POST"
+      "url": "URI/for/your/activity/save"
     },
     "publish": {
-      "url": "https://bitmessage-middleware.onrender.com/mc/activity/publish",
-      "verb": "POST"
+      "url": "URI/for/your/activity/publish"
     },
     "validate": {
-      "url": "https://bitmessage-middleware.onrender.com/mc/activity/validate",
-      "verb": "POST"
+      "url": "URI/for/your/activity/validate"
     },
     "stop": {
-      "url": "https://bitmessage-middleware.onrender.com/mc/activity/stop",
-      "verb": "POST"
+      "url": "URI/for/your/activity/stop"
     }
   },
+  "wizardSteps": [
+    { "label": "Step 1", "key": "step1" },
+    { "label": "Step 2", "key": "step2" },
+    { "label": "Step 3", "key": "step3" },
+    { "label": "Step 4", "key": "step4", "active": false }
+  ],
   "userInterfaces": {
     "configModal": {
-      "url": "index.html",
-      "height": 500,
-      "width": 500
+      "height": 200,
+      "width": 300,
+      "fullscreen": true
     }
   },
-  "edit": {
-    "url": "index.html",
-    "height": 500,
-    "width": 500
+  "schema": {
+    "arguments": {
+      "execute": {
+        "inArguments": [
+          {
+            "phoneNumber": {
+              "dataType": "Phone",
+              "isNullable": false,
+              "direction": "in"
+            }
+          },
+          {
+            "emailAddress": {
+              "dataType": "Email",
+              "isNullable": false,
+              "direction": "in"
+            }
+          }
+        ],
+        "outArguments": [
+          {
+            "foundSignupDate": {
+              "dataType": "Date",
+              "direction": "out",
+              "access": "visible"
+            }
+          }
+        ]
+      }
+    }
   }
 }
