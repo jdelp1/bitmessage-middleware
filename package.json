@@ -10,12 +10,21 @@
     "start": "node app.js",
     "postinstall": "gulp default"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psapir/journey-builder-activity-template.git"
+  },
   "keywords": [
     "journey builder",
     "salesforce marketing cloud engagement",
     "heroku"
   ],
+  "author": "Pato Sapir",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/psapir/journey-builder-activity-template/issues"
+  },
+  "homepage": "https://github.com/psapir/journey-builder-activity-template#readme",
   "dependencies": {
     "@salesforce-ux/design-system": "^2.27.2",
     "axios": "^1.8.4",
