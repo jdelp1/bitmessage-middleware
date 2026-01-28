@@ -8,8 +8,8 @@
     "type": "RESTDECISION",
     "lang": {
         "en-US": {
-            "name": "Message",
-          "description": "A Template for a custom Journey Builder activity",
+            "name": "SMS BitMessage",
+          "description": "Envía SMS vía BitMessage con SFMC",
           "step1Label": "Configure Activity"
         }
     },
