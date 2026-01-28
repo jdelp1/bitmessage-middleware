@@ -1,26 +1,24 @@
 # Journey Builder Activity Template
-
 ### Starter template for a messaging JB Activity using Node.JS
 
 **NOTE:** This app and the associated code is NOT production quality, its pure purpose is to demonstrate the full flow of custom interactions in Journey Builder
 
 ### Pre-Requisites
 
-- Node.js (if you'd like to test locally)
-- A Marketing Cloud Account with Journey Builder
-- A publicly accessible web server (this template was built using a free [Heroku](https://heroku.com) account with SSL support
+* Node.js (if you'd like to test locally)
+* A Marketing Cloud Account with Journey Builder
+* A publicly accessible web server (this template was built using a free [Heroku](https://heroku.com) account with SSL support
 
 ### Getting Started
 
-#### Step 1. Configure web server
-
+#### Step 1. Configure web server 
 This guide covers Heroku, skip this step if you are familiar on how to deploy a Node.js app
 
 1. Fork and Clone this repository
 2. Login into [Heroku](https://heroku.com)
 3. Click on New > Create new app
 4. Give a name to the app and click on "Create App"
-5. Choose your preferred deployment method (Github or Heroku Cli are nice to work with)
+5. Choose your preferred deployment method (Github or Heroku Cli are nice to work with) 
 6. Deploy your code based on the selected deployment method
 7. Once your code is deployed, open the app url and verify you can see the UI for the activity
 
@@ -37,9 +35,7 @@ This guide covers Heroku, skip this step if you are familiar on how to deploy a 
 #### Step 3. Configure Activity
 
 1. Open /public/config.json and:
-
-- Replace <your-domain-here> with the domain for your website
-
+* Replace <your-domain-here> with the domain for your website
 2. Open /public/images and replace with the icons for the activity to your liking
 
 #### Step 4. Add Heroku vars
@@ -54,3 +50,9 @@ This guide covers Heroku, skip this step if you are familiar on how to deploy a 
 
 1. Login into Marketing Cloud and navigate to Journey Builder
 2. You should be able to see your custom activity and drag it into the canvas!
+
+### Want to learn more?
+
+If you'd like to learn more about building custom Journey Builder Activities email me at [info@exthq.com](mailto:info@exthq.com)
+
+Also, follow me on [LinkedIn](https://www.linkedin.com/in/patosapir/) to get the latest updates and great articles about Salesforce Marketing Cloud!

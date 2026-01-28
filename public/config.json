@@ -1,86 +1,88 @@
 {
-  "workflowApiVersion": "1.1",
-  "metaData": {
-    "icon": "images/icon.png",
-    "iconSmall": "images/iconSmall.png",
-    "category": "message"
-  },
-  "type": "RESTDECISION",
-  "lang": {
-    "en-US": {
-      "name": "Message",
-      "description": "A Template for a custom Journey Builder activity",
-      "step1Label": "Configure Activity"
-    }
-  },
-  "arguments": {
-    "execute": {
-      "inArguments": [],
-      "outArguments": [],
-      "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/execute",
-      "verb": "POST",
-      "body": "",
-      "header": "",
-      "format": "json",
-      "useJwt": true,
-      "timeout": 10000,
-      "concurrentRequests": 10
-    }
-  },
-  "configurationArguments": {
-    "save": {
-      "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/save",
-      "verb": "POST",
-      "useJwt": true
+    "workflowApiVersion": "1.1",
+    "metaData": {
+        "icon": "images/icon.png",
+        "iconSmall": "images/iconSmall.png",
+        "category": "message"
     },
-    "publish": {
-      "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/publish",
-      "verb": "POST",
-      "useJwt": true
+    "type": "RESTDECISION",
+    "lang": {
+        "en-US": {
+            "name": "Message",
+          "description": "A Template for a custom Journey Builder activity",
+          "step1Label": "Configure Activity"
+        }
     },
-    "stop": {
-      "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/stop",
-      "verb": "POST",
-      "useJwt": true
-    },
-    "validate": {
-      "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/validate",
-      "verb": "POST",
-      "useJwt": true
-    }
-  },
-  "outcomes": [
-    {
-      "arguments": {
-        "branchResult": "sent"
-      },
-      "metaData": {
-        "label": "Sent"
-      }
-    },
-    {
-      "arguments": {
-        "branchResult": "notsent"
-      },
-      "metaData": {
-        "label": "Not Sent"
-      }
-    }
-  ],
-  "wizardSteps": [{ "label": "Configure Activity", "key": "step1" }],
-  "userInterfaces": {
-    "configModal": {
-      "height": 400,
-      "width": 500,
-      "fullscreen": false
-    }
-  },
-  "schema": {
     "arguments": {
-      "execute": {
-        "inArguments": [],
-        "outArguments": []
+        "execute": {
+           "inArguments":[],
+          "outArguments": [],
+          "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/execute",
+           "verb": "POST",
+            "body": "",
+            "header": "",
+            "format": "json",
+            "useJwt": true,
+            "timeout": 10000,
+            "concurrentRequests":10
+        }
+    },
+    "configurationArguments": {
+      "save": {
+        "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/save",
+          "verb": "POST",
+        "useJwt": true
+       },
+       "publish": {
+        "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/publish",
+           "verb": "POST",
+        "useJwt": true
+       },
+      "stop": {
+        "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/stop",
+           "verb": "POST",
+        "useJwt": true
+      },
+      "validate": {
+        "url": "https://jb-activity-template-d520c04ed7c7.herokuapp.com/journeybuilder/validate",
+        "verb": "POST",
+        "useJwt": true
       }
+    },
+    "outcomes": [
+        {
+          "arguments": {
+            "branchResult": "sent"
+          },
+          "metaData": {
+            "label": "Sent"
+          }
+        },
+         {
+          "arguments": {
+            "branchResult": "notsent"
+          },
+            "metaData": {
+                "label": "Not Sent"
+            }
+        }
+      ],
+    "wizardSteps": [
+        { "label": "Configure Activity", "key": "step1" }
+    ],
+    "userInterfaces": {
+        "configModal": {
+            "height": 400,
+            "width": 500,
+          "fullscreen": false
+        }
+    },
+    "schema": {
+        "arguments": {
+            "execute": {
+                "inArguments": [],
+                "outArguments": []
+            }
+        }
     }
-  }
 }

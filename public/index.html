@@ -1,89 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title></title>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="vendor/salesforce-lightning-design-system/styles/salesforce-lightning-design-system.css"
-    />
-    <link rel="stylesheet" href="css/styles.css" />
-    <script
-      type="text/javascript"
-      src="//code.jquery.com/git/jquery-git.min.js"
-    ></script>
+    <link rel="stylesheet" href="vendor/salesforce-lightning-design-system/styles/salesforce-lightning-design-system.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript" src="//code.jquery.com/git/jquery-git.min.js"></script>
     <script type="text/javascript" src="js/require.js"></script>
     <script type="text/javascript">
-      (function () {
-        var config = {
-          baseUrl: "js",
-        };
+        (function () {
+            var config = { 
+                baseUrl: 'js'
+            };
 
-        var dependencies = ["customActivity"];
+            var dependencies = [
+                'customActivity'
+            ];
 
-        require(config, dependencies);
-      })();
+            require(config, dependencies);
+        })();
     </script>
-  </head>
+</head>
 
-  <body>
+<body>
     <!-- spinner: display this div and hide main grid div while loading data -->
-    <div class="spinner" style="display: none">
-      <div class="demo-only" style="height: 6rem">
-        <div
-          role="status"
-          class="slds-spinner slds-spinner_medium slds-spinner_brand"
-        >
-          <span class="slds-assistive-text">Loading</span>
-          <div class="slds-spinner__dot-a"></div>
-          <div class="slds-spinner__dot-b"></div>
+    <div class="spinner" style="display: none;">
+        <div class="demo-only" style="height: 6rem;">
+            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
         </div>
-      </div>
     </div>
     <!--/ spinner -->
     <!--/ This activity has only one step, but if you had more than one step you can use more than one div and show them based on the clickedNext event triggered in Postmonger -->
-    <div id="step1" class="step">
-      <div class="slds-grid">
-        <main class="slds-col slds-p-horizontal--small">
-          <div class="slds-form slds-form_stacked">
-            <!--message body-->
-            <div class="slds-form-element" id="message-body-panel">
-              <label
-                class="slds-form-element__label slds-text-heading_small"
-                for="message-body"
-                >Message Body</label
-              >
-              <div class="slds-form-element__control">
-                <textarea
-                  id="message-body"
-                  class="slds-textarea"
-                  placeholder="Placeholder Text"
-                  rows="5"
-                  maxlength="1000"
-                  autofocus
-                ></textarea>
-              </div>
-              <div class="slds-text-body_small">
-                Use data binding to personalize your messsage.
-                <div id="personalize" style="display: none">
-                  To use journey data attributes use this prefix:
-                  <span id="prefix"></span>.
+     <div id="step1" class="step">
+        <div class="slds-grid">
+            <main class="slds-col slds-p-horizontal--small">
+                <div class="slds-form slds-form_stacked">
+                    <!--message body-->
+                    <div class="slds-form-element" id="message-body-panel">
+                        <label class="slds-form-element__label slds-text-heading_small" for="message-body">Message Body</label>
+                        <div class="slds-form-element__control">
+                            <textarea id="message-body" class="slds-textarea " placeholder="Placeholder Text" rows="5" maxlength="1000" autofocus></textarea>
+                        </div>
+                        <div class="slds-text-body_small">Use data binding to personalize your messsage. <div id="personalize" style="display: none;">To use journey data attributes use this prefix: <span id="prefix"></span>.</div></div>
+                        <div class="slds-text-color_error" id="message-body-error" style="display:none;">Message body is required.</div>
+                    </div>
+                    <!--/message body-->
                 </div>
-              </div>
-              <div
-                class="slds-text-color_error"
-                id="message-body-error"
-                style="display: none"
-              >
-                Message body is required.
-              </div>
-            </div>
-            <!--/message body-->
-          </div>
-        </main>
-      </div>
+            </main>
+        </div>
     </div>
-  </body>
+</body>
+
 </html>
