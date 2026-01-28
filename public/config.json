@@ -9,7 +9,7 @@
   "lang": {
     "en-US": {
       "name": "Enviar SMS (Middleware)",
-      "description": "Envía SMS usando BitMessage vía middleware"
+      "description": "Envía SMS 1 a 1 usando BitMessage vía middleware"
     }
   },
   "arguments": {
