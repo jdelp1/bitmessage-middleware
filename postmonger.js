@@ -6,26 +6,37 @@
 // Use CDN version of Postmonger - include this in your HTML:
 // <script src="https://cdn.jsdelivr.net/npm/postmonger@2.0.0/postmonger.min.js"></script>
 
-let connection = new Postmonger.Session();
+let connection = null;
 let payload = {};
 
 // Wait for DOM to be ready
 document.addEventListener("DOMContentLoaded", function () {
-  // Setup UI event handlers
+  // Setup UI event handlers first (works even without Postmonger)
   setupUI();
 
-  // Listen for Journey Builder events
-  connection.on("initActivity", onInitActivity);
-  connection.on("requestedTokens", onGetTokens);
-  connection.on("requestedEndpoints", onGetEndpoints);
-  connection.on("clickedNext", onClickedNext);
-  connection.on("clickedBack", onClickedBack);
-  connection.on("gotoStep", onGotoStep);
+  // Initialize Postmonger only if available (inside Journey Builder)
+  try {
+    if (typeof Postmonger !== 'undefined') {
+      connection = new Postmonger.Session();
+      
+      // Listen for Journey Builder events
+      connection.on("initActivity", onInitActivity);
+      connection.on("requestedTokens", onGetTokens);
+      connection.on("requestedEndpoints", onGetEndpoints);
+      connection.on("clickedNext", onClickedNext);
+      connection.on("clickedBack", onClickedBack);
+      connection.on("gotoStep", onGotoStep);
 
-  // Signal to Journey Builder that we're ready
-  connection.trigger("ready");
-  connection.trigger("requestTokens");
-  connection.trigger("requestEndpoints");
+      // Signal to Journey Builder that we're ready
+      connection.trigger("ready");
+      connection.trigger("requestTokens");
+      connection.trigger("requestEndpoints");
+    } else {
+      console.log("Running in standalone mode (outside Journey Builder)");
+    }
+  } catch (e) {
+    console.log("Postmonger not available - running in standalone mode");
+  }
 });
 
 /**
@@ -76,19 +87,30 @@ function onClickedNext() {
 
   // Update payload with the message
   payload.inArguments = [{ texto: message }];
+  
+  if (!payload.metaData) {
+    payload.metaData = {};
+  }
   payload.metaData.isConfigured = true;
 
   console.log("Saving configuration:", payload);
 
-  // Notify Journey Builder to save
-  connection.trigger("updateActivity", payload);
+  // Notify Journey Builder to save (only if connected)
+  if (connection) {
+    connection.trigger("updateActivity", payload);
+  } else {
+    console.log("Would save:", payload);
+    alert("Configuración guardada (modo standalone)");
+  }
 }
 
 /**
  * Called when user clicks Back in Journey Builder
  */
 function onClickedBack() {
-  connection.trigger("prevStep");
+  if (connection) {
+    connection.trigger("prevStep");
+  }
 }
 
 /**
