@@ -40,12 +40,6 @@
       "verb": "POST"
     }
   },
-  "wizardSteps": [
-    {
-      "label": "Configurar SMS",
-      "key": "step1"
-    }
-  ],
   "userInterfaces": {
     "configModal": {
       "url": "index.html",
