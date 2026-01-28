@@ -9,6 +9,12 @@ const options = {}
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
 
+  // Register static file serving for the public directory
+  fastify.register(require('@fastify/static'), {
+    root: path.join(__dirname, 'public'),
+    prefix: '/' // files will be served from root URL
+  })
+
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
