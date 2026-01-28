@@ -1,63 +1,83 @@
-"use strict";
+// Deps
+import Path from 'path';
+import axios from 'axios';
+import JWT from '../lib/jwtDecoder.js';
 
-const JWT = require("../utils/jwtDecoder");
-const logger = require("../utils/logger");
-
-async function routes(fastify) {
-  fastify.post("/mc/activity/execute", async (request, reply) => {
+/*
+ * POST Handler for /execute/ route of Activity.
+ */
+export async function execute(req, res) {
     try {
-      // Check if request body is JWT encoded (from Journey Builder)
-      let args;
-      logger.info({ body: request.body }, "Request body received");
+        // example on how to decode JWT
+        JWT(req.body, process.env.jwtSecret, async (err, decoded) => {
 
-      if (request?.body?.toString && request.body.toString().includes(".")) {
-        // JWT encoded data from Journey Builder
-        const data = JWT(request?.body);
-        fastify.log.info({ data }, "JWT decoded data");
-        args = data?.inArguments?.[0] || {};
-      } else {
-        // Regular JSON from frontend
-        args = request?.body?.inArguments?.[0] || {};
-      }
+            console.log(`Jwt: ${req.body.toString('utf8')}`);
 
-      const { telefono, texto } = args;
-      logger.info({ args }, "Argumentos dentro de inArguments");
+            // verification error -> unauthorized request
+            if (err) {
+                console.error(err);
+                return res.status(401).end();
+            }
 
-      if (!texto) {
-        return reply.code(400).send({ error: "texto requerido" });
-      }
+            if (decoded && decoded.inArguments && decoded.inArguments.length > 0) {
+                
+                // decoded in arguments
+                var decodedArgs = decoded.inArguments[0];
 
-      // Log the received message
-      logger.info({ telefono, texto }, "Mensaje recibido");
+                // Below is an example of calling a third party service, you can modify the URL of the requestBin in the environment variables
+                if (process.env.requestBin) {
+                    const response = await axios.post(process.env.requestBin,decodedArgs,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+                }
 
-      // Here you would call your actual service if needed
-      // For now, just return success
-      return reply
-        .code(200)
-        .send({ success: true, message: "Mensaje procesado correctamente" });
-    } catch (e) {
-      fastify.log.error(e);
-      return reply.code(500).send({ error: "Error ejecutando actividad" });
+                // This is how you would return a branch result in a RESTDECISION activity type: see config.json file for potential outcomes
+                return res.status(200).json({ branchResult: "sent" });
+            } else {
+                console.error('inArguments invalid.');
+                return res.status(200).json({ branchResult: "notsent" });
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(200).json({ branchResult: "notsent" });
     }
-  });
+};
 
-  // Endpoints obligatorios del lifecycle
-  fastify.post("/mc/activity/save", async (request, reply) => {
-    logger.info({ body: request.body || {} }, "Save endpoint called");
-    return {};
-  });
-  fastify.post("/mc/activity/validate", async (request, reply) => {
-    logger.info({ body: request.body || {} }, "Validate endpoint called");
-    return {};
-  });
-  fastify.post("/mc/activity/publish", async (request, reply) => {
-    logger.info({ body: request.body || {} }, "Publish endpoint called");
-    return {};
-  });
-  fastify.post("/mc/activity/stop", async (request, reply) => {
-    logger.info({ body: request.body || {} }, "Stop endpoint called");
-    return {};
-  });
-}
 
-module.exports = routes;
+/*
+ * POST Handler for /publish/ route of Activity.
+ */
+export async function publish(req, res) {
+    console.log(`Publish Event: ${req.body.toString('utf8')}`);
+    res.send(200, 'Publish');
+};
+
+/*
+ * POST Handler for /validate/ route of Activity.
+ */
+export async function validate(req, res) {
+    console.log(`Validate Event: ${req.body.toString('utf8')}`);
+    res.send(200, 'Validate');
+};
+
+
+/*
+ * POST Handler for / route of Activity (this is the edit route).
+ */
+export async function edit(req, res) {
+    console.log(`Edit Event: ${req.body.toString('utf8')}`);
+    res.send(200, 'Edit');
+};
+
+/*
+ * POST Handler for /save/ route of Activity.
+ */
+export async function save(req, res) {
+    console.log(`Save Event: ${req.body.toString('utf8')}`);
+    res.send(200, 'Save');
+};

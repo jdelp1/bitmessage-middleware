@@ -1,26 +1,40 @@
 {
-  "name": "bit-middleware",
-  "version": "1.0.0",
-  "description": "This project was bootstrapped with Fastify-CLI.",
-  "main": "app.js",
-  "directories": {
-    "test": "test"
+  "type": "module",
+  "name": "jb-activity-template",
+  "version": "2.0.0",
+  "description": "Journey Builder Activity Template",
+  "engines": {
+    "node": ">=20"
   },
   "scripts": {
-    "test": "node --test test/**/*.test.js",
-    "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "start": "node app.js",
+    "postinstall": "gulp default"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psapir/journey-builder-activity-template.git"
+  },
+  "keywords": [
+    "journey builder",
+    "salesforce marketing cloud engagement",
+    "heroku"
+  ],
+  "author": "Pato Sapir",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/psapir/journey-builder-activity-template/issues"
+  },
+  "homepage": "https://github.com/psapir/journey-builder-activity-template#readme",
   "dependencies": {
-    "@fastify/autoload": "^6.0.0",
-    "@fastify/sensible": "^6.0.0",
-    "@fastify/static": "^9.0.0",
-    "fastify": "^5.0.0",
-    "fastify-cli": "^7.4.1",
-    "fastify-plugin": "^5.0.0",
-    "jsonwebtoken": "^9.0.3"
+    "@salesforce-ux/design-system": "^2.27.2",
+    "axios": "^1.8.4",
+    "body-parser": "^1.18.2",
+    "errorhandler": "^1.5.0",
+    "express": "^4.15.4",
+    "gulp-sourcemaps": "^2.6.5",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "gulp": "^5.0.1"
   }
 }

@@ -1,36 +1,39 @@
-'use strict'
+// Module Dependencies
+// -------------------
+import express from 'express';
+import bodyParser from 'body-parser';
+import errorhandler from 'errorhandler';
+import http from 'http';
+import path from 'path';
+import * as activity from './routes/activity.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const path = require('node:path')
-const AutoLoad = require('@fastify/autoload')
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-// Pass --options via CLI arguments in command to enable these options.
-const options = {}
+var app = express();
 
-module.exports = async function (fastify, opts) {
-  // Place here your custom code!
+// Configure Express
+app.set('port', process.env.PORT || 3000);
+app.use(bodyParser.raw({type: 'application/jwt'}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-  // Register static file serving for the root directory
-  fastify.register(require('@fastify/static'), {
-    root: __dirname,
-    prefix: '/' // files will be served from root URL
-  })
+app.use(express.static(path.join(__dirname, 'public')));
 
-  // Do not touch the following lines
-
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'plugins'),
-    options: Object.assign({}, opts)
-  })
-
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'routes'),
-    options: Object.assign({}, opts)
-  })
+// Express in Development Mode
+if ('development' == app.get('env')) {
+  app.use(errorhandler());
 }
 
-module.exports.options = options
+// Custom Activity Routes
+app.post('/journeybuilder/save', activity.save );
+app.post('/journeybuilder/validate', activity.validate );
+app.post('/journeybuilder/publish', activity.publish );
+app.post('/journeybuilder/execute', activity.execute );
+
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
