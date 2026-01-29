@@ -6,10 +6,10 @@
     "category": "custom"
   },
   "type": "RESTDECISION",
-  "key": "scheduled-sms-activity",
+  "key": "scheduled-sms-activity-1",
   "lang": {
     "en-US": {
-      "name": "Envio masivo programado Bitmessage",
+      "name": "Envío programado BitMessage",
       "description": "Programa SMS para envío posterior vía BitMessage",
       "step1Label": "Configure Scheduled SMS"
     }

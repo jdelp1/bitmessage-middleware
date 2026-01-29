@@ -6,10 +6,10 @@
     "category": "custom"
   },
   "type": "RESTDECISION",
-  "key": "instant-sms-activity",
+  "key": "instant-sms-activity-1",
   "lang": {
     "en-US": {
-      "name": "SMS BitMessage v2.1",
+      "name": "Envío instantáneo BitMessage",
       "description": "Envía SMS vía BitMessage con SFMC",
       "step1Label": "Configure Activity"
     }
