@@ -1,29 +1,29 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es">
   <head>
-    <title>Programar SMS Custom Activity</title>
     <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta
       http-equiv="Cache-Control"
       content="no-cache, no-store, must-revalidate"
     />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <title>Programar SMS Custom Activity</title>
     <link
       rel="stylesheet"
       href="vendor/salesforce-lightning-design-system/styles/salesforce-lightning-design-system.css"
     />
     <link rel="stylesheet" href="css/styles.css" />
-    <script type="text/javascript" src="js/require.js"></script>
-    <script type="text/javascript">
+    <script src="js/require.js"></script>
+    <script>
       (function () {
-        var config = {
+        const config = {
           baseUrl: "js",
         };
 
-        var dependencies = ["customActivity"];
+        const dependencies = ["customActivity"];
 
         require(config, dependencies);
       })();
@@ -31,12 +31,11 @@
   </head>
 
   <body>
-    <!-- spinner: display this div and hide main grid div while loading data -->
-    <div class="spinner">
+    <div class="spinner" role="status" aria-live="polite">
       <div class="demo-only" style="height: 6rem">
         <div
-          role="status"
           class="slds-spinner slds-spinner_medium slds-spinner_brand"
+          role="status"
         >
           <span class="slds-assistive-text">Cargando</span>
           <div class="slds-spinner__dot-a"></div>
@@ -44,30 +43,62 @@
         </div>
       </div>
     </div>
-    <!--/ spinner -->
-    <!--/ This activity has only one step, but if you had more than one step you can use more than one div and show them based on the clickedNext event triggered in Postmonger -->
+
     <div id="step1" class="step">
       <div class="slds-grid">
         <main class="slds-col slds-p-horizontal--small">
-          <div class="slds-form slds-form_stacked">
-            <!--message body-->
+          <form class="slds-form slds-form_stacked">
+            <div class="slds-form-element" id="campaign-panel">
+              <label
+                class="slds-form-element__label slds-text-heading_small"
+                for="campaign-reference"
+              >
+                Referencia de Campaña
+              </label>
+              <div class="slds-form-element__control">
+                <input
+                  type="text"
+                  id="campaign-reference"
+                  class="slds-input"
+                  placeholder="Ej: SOIB"
+                  maxlength="80"
+                  aria-describedby="campaign-help campaign-error"
+                  aria-required="true"
+                />
+              </div>
+              <div class="slds-text-body_small" id="campaign-help">
+                Introduce la campaña.
+              </div>
+              <div
+                class="slds-text-color_error"
+                id="campaign-error"
+                role="alert"
+                aria-live="assertive"
+              >
+                La campaña es un dato requerido.
+              </div>
+            </div>
+
             <div class="slds-form-element" id="message-body-panel">
               <label
                 class="slds-form-element__label slds-text-heading_small"
                 for="message-body"
-                >Cuerpo del mensaje</label
               >
+                Cuerpo del mensaje
+              </label>
               <div class="slds-form-element__control">
                 <textarea
                   id="message-body"
                   class="slds-textarea"
-                  placeholder="Placeholder Text"
+                  placeholder="Escribe tu mensaje aquí"
                   rows="5"
                   maxlength="1000"
                   autofocus
+                  aria-describedby="message-help message-body-error"
+                  aria-required="true"
                 ></textarea>
               </div>
-              <div class="slds-text-body_small">
+              <div class="slds-text-body_small" id="message-help">
                 Usa data binding para personalizar tu mensaje.
                 <div id="personalize">
                   Para usar atributos de la entrada de datos del journey usa
@@ -77,12 +108,13 @@
               <div
                 class="slds-text-color_error"
                 id="message-body-error"
+                role="alert"
+                aria-live="assertive"
               >
-                El cuerpo del mensaje es un dato requerido test 123 123.
+                El cuerpo del mensaje es un dato requerido.
               </div>
             </div>
-            <!--/message body-->
-          </div>
+          </form>
         </main>
       </div>
     </div>

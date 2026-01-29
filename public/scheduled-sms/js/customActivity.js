@@ -5,6 +5,8 @@ define(["postmonger"], function (Postmonger) {
 
   // DOM element references
   const elements = {
+    campaignReference: null,
+    campaignError: null,
     messageBody: null,
     messageBodyError: null,
     personalize: null,
@@ -32,6 +34,8 @@ define(["postmonger"], function (Postmonger) {
 
   function onRender() {
     // Cache DOM elements
+    elements.campaignReference = document.getElementById("campaign-reference");
+    elements.campaignError = document.getElementById("campaign-error");
     elements.messageBody = document.getElementById("message-body");
     elements.messageBodyError = document.getElementById("message-body-error");
     elements.personalize = document.getElementById("personalize");
@@ -90,6 +94,9 @@ define(["postmonger"], function (Postmonger) {
     // For each inArgument, you can pre-populate the fields configured by the user!
     if (hasInArguments) {
       const inArgument = inArguments[0];
+      if (elements.campaignReference && inArgument.campanyaReferencia) {
+        elements.campaignReference.value = inArgument.campanyaReferencia;
+      }
       if (elements.messageBody && inArgument.message) {
         elements.messageBody.value = inArgument.message;
       }
@@ -114,20 +121,39 @@ define(["postmonger"], function (Postmonger) {
 
   function save() {
     // Here's is where you can validate your attributes before saving the activity
+    const campaignValue = elements.campaignReference?.value?.trim() || "";
     const messageBodyValue = elements.messageBody?.value?.trim() || "";
+    let isValid = true;
 
-    if (messageBodyValue === "") {
+    // Validate campaign reference
+    if (!campaignValue) {
+      if (elements.campaignError) {
+        elements.campaignError.style.display = "block";
+      }
+      isValid = false;
+    } else {
+      if (elements.campaignError) {
+        elements.campaignError.style.display = "none";
+      }
+    }
+
+    // Validate message body
+    if (!messageBodyValue) {
       if (elements.messageBodyError) {
         elements.messageBodyError.style.display = "block";
       }
-      connection.trigger("ready");
+      isValid = false;
     } else {
-      // Hide error message if shown
       if (elements.messageBodyError) {
         elements.messageBodyError.style.display = "none";
       }
+    }
 
+    if (!isValid) {
+      connection.trigger("ready");
+    } else {
       const arg = {
+        campanyaReferencia: campaignValue,
         message: messageBodyValue,
       };
 
