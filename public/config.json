@@ -17,7 +17,7 @@
     "execute": {
       "inArguments": [],
       "outArguments": [],
-      "url": "https://bitmessage-middleware.onrender.com/execute",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/execute",
       "verb": "POST",
       "body": "",
       "header": "",
@@ -29,22 +29,27 @@
   },
   "configurationArguments": {
     "save": {
-      "url": "https://bitmessage-middleware.onrender.com/save",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/save",
       "verb": "POST",
       "useJwt": true
     },
     "publish": {
-      "url": "https://bitmessage-middleware.onrender.com/publish",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/publish",
       "verb": "POST",
       "useJwt": true
     },
     "stop": {
-      "url": "https://bitmessage-middleware.onrender.com/stop",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/stop",
       "verb": "POST",
       "useJwt": true
     },
     "validate": {
-      "url": "https://bitmessage-middleware.onrender.com/validate",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/validate",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "edit": {
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/edit",
       "verb": "POST",
       "useJwt": true
     }
