@@ -3,10 +3,10 @@
   "metaData": {
     "icon": "images/icon.png",
     "iconSmall": "images/iconSmall.png",
-    "category": "message v 2.0"
+    "category": "custom"
   },
   "type": "RESTDECISION",
-  "key": "mi-activity-v2",
+  "key": "instant-sms-activity",
   "lang": {
     "en-US": {
       "name": "SMS BitMessage v2.1",
@@ -18,7 +18,7 @@
     "execute": {
       "inArguments": [],
       "outArguments": [],
-      "url": "https://site--custom-activity--974pyfp922mc.code.run/execute",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/instant-sms/execute",
       "verb": "POST",
       "body": "",
       "header": "",
@@ -30,22 +30,22 @@
   },
   "configurationArguments": {
     "save": {
-      "url": "https://site--custom-activity--974pyfp922mc.code.run/save",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/instant-sms/save",
       "verb": "POST",
       "useJwt": true
     },
     "publish": {
-      "url": "https://site--custom-activity--974pyfp922mc.code.run/publish",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/instant-sms/publish",
       "verb": "POST",
       "useJwt": true
     },
     "stop": {
-      "url": "https://site--custom-activity--974pyfp922mc.code.run/stop",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/instant-sms/stop",
       "verb": "POST",
       "useJwt": true
     },
     "validate": {
-      "url": "https://site--custom-activity--974pyfp922mc.code.run/validate",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/instant-sms/validate",
       "verb": "POST",
       "useJwt": true
     },

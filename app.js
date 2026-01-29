@@ -8,7 +8,8 @@ import bodyParser from "body-parser";
 import errorhandler from "errorhandler";
 import http from "http";
 import path from "path";
-import * as activity from "./routes/activity.js";
+import * as instantSms from "./routes/activities/instant-sms.js";
+import * as scheduledSms from "./routes/activities/scheduled-sms.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -31,20 +32,30 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+// Serve static files for each activity
+app.use("/instant-sms", express.static(path.join(__dirname, "public/instant-sms")));
+app.use("/scheduled-sms", express.static(path.join(__dirname, "public/scheduled-sms")));
 
 // Express in Development Mode
 if ("development" == app.get("env")) {
   app.use(errorhandler());
 }
 
-// Custom Activity Routes
-app.post("/save", activity.save);
-app.post("/validate", activity.validate);
-app.post("/publish", activity.publish);
-app.post("/execute", activity.execute);
-app.post("/stop", activity.stop);
-app.post("/edit", activity.edit);
+// ===== Instant SMS Activity Routes =====
+app.post("/instant-sms/save", instantSms.save);
+app.post("/instant-sms/validate", instantSms.validate);
+app.post("/instant-sms/publish", instantSms.publish);
+app.post("/instant-sms/execute", instantSms.execute);
+app.post("/instant-sms/stop", instantSms.stop);
+app.post("/instant-sms/edit", instantSms.edit);
+
+// ===== Scheduled SMS Activity Routes =====
+app.post("/scheduled-sms/save", scheduledSms.save);
+app.post("/scheduled-sms/validate", scheduledSms.validate);
+app.post("/scheduled-sms/publish", scheduledSms.publish);
+app.post("/scheduled-sms/execute", scheduledSms.execute);
+app.post("/scheduled-sms/stop", scheduledSms.stop);
+app.post("/scheduled-sms/edit", scheduledSms.edit);
 
 http.createServer(app).listen(app.get("port"), function () {
   console.log("Express server listening on port " + app.get("port"));

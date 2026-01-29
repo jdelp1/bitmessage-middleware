@@ -1,0 +1,92 @@
+{
+  "workflowApiVersion": "1.1",
+  "metaData": {
+    "icon": "images/icon.png",
+    "iconSmall": "images/iconSmall.png",
+    "category": "custom"
+  },
+  "type": "RESTDECISION",
+  "key": "scheduled-sms-activity",
+  "lang": {
+    "en-US": {
+      "name": "Envio masivo programado Bitmessage",
+      "description": "Programa SMS para envío posterior vía BitMessage",
+      "step1Label": "Configure Scheduled SMS"
+    }
+  },
+  "arguments": {
+    "execute": {
+      "inArguments": [],
+      "outArguments": [],
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms/execute",
+      "verb": "POST",
+      "body": "",
+      "header": "",
+      "format": "json",
+      "useJwt": true,
+      "timeout": 10000,
+      "concurrentRequests": 10
+    }
+  },
+  "configurationArguments": {
+    "save": {
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms/save",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "publish": {
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms/publish",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "stop": {
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms/stop",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "validate": {
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms/validate",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "edit": {
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms/edit",
+      "verb": "POST",
+      "useJwt": true
+    }
+  },
+  "outcomes": [
+    {
+      "arguments": {
+        "branchResult": "scheduled"
+      },
+      "metaData": {
+        "label": "Scheduled"
+      }
+    },
+    {
+      "arguments": {
+        "branchResult": "failed"
+      },
+      "metaData": {
+        "label": "Failed"
+      }
+    }
+  ],
+  "wizardSteps": [{ "label": "Configure Activity", "key": "step1" }],
+  "userInterfaces": {
+    "configModal": {
+      "height": 400,
+      "width": 500,
+      "fullscreen": false
+    }
+  },
+  "schema": {
+    "arguments": {
+      "execute": {
+        "inArguments": [],
+        "outArguments": []
+      }
+    }
+  }
+}
