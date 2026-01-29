@@ -3,19 +3,66 @@ import axios from "axios";
 import JWT from "../lib/jwtDecoder.js";
 import logger from "../utils/logger.js";
 
+/**
+ * Sends SMS via BitMessage API
+ * @param {Object} payload - SMS payload {telefono, texto, campanyaReferencia}
+ * @returns {Promise<{success: boolean, data: Object}>}
+ */
+async function sendBitMessageSMS(payload) {
+  try {
+    logger.info({ payload }, "Calling BitMessage API");
+
+    const response = await axios.post(
+      process.env.BITMESSAGE_INSTANT_SMS_API,
+      payload,
+      {
+        auth: {
+          username: process.env.BITMESSAGE_USERNAME,
+          password: process.env.BITMESSAGE_PASSWORD,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    logger.info(
+      {
+        status: response.status,
+        estado: response.data?.estado,
+        id: response.data?.id,
+      },
+      "BitMessage API responded",
+    );
+
+    const estado = response.data?.estado?.toUpperCase();
+
+    if (estado === "ENVIADO" || estado === "CONFIRMADO") {
+      logger.info({ smsId: response.data?.id }, "SMS sent successfully");
+      return { success: true, data: response.data };
+    } else {
+      logger.warn(
+        { estado, response: response.data },
+        "Unknown BitMessage API status",
+      );
+      return { success: false, data: response.data };
+    }
+  } catch (error) {
+    logger.error(
+      { err: error, response: error.response?.data },
+      "BitMessage API call failed",
+    );
+    return { success: false, error };
+  }
+}
+
 /*
  * POST Handler for /execute/ route of Activity.
  */
 export async function execute(req, res) {
-  // Prevent caching
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.set("Pragma", "no-cache");
-  res.set("Expires", "0");
-
   logger.info({ endpoint: "/execute" }, "Execute endpoint called");
 
   try {
-    // example on how to decode JWT
     JWT(req.body, process.env.jwtSecret, async (err, decoded) => {
       logger.debug({ jwt: req.body.toString("utf8") }, "JWT received");
 
@@ -26,28 +73,26 @@ export async function execute(req, res) {
       }
 
       if (decoded && decoded.inArguments && decoded.inArguments.length > 0) {
-        // decoded in arguments
         const decodedArgs = decoded.inArguments[0];
         logger.info({ args: decodedArgs }, "Decoded inArguments");
 
-        // Below is an example of calling a third party service, you can modify the URL of the requestBin in the environment variables
-        if (process.env.requestBin) {
-          logger.info({ url: process.env.requestBin }, "Calling third party service");
-          const response = await axios.post(
-            process.env.requestBin,
-            decodedArgs,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            },
-          );
-          logger.info({ status: response.status }, "Third party service responded");
-        }
+        // Prepare BitMessage payload
+        const smsPayload = {
+          telefono: decodedArgs.telefono || decodedArgs.phone,
+          texto: decodedArgs.texto || decodedArgs.message,
+          campanyaReferencia: process.env.BITMESSAGE_CAMPANYA || "SOIB"
+        };
 
-        // This is how you would return a branch result in a RESTDECISION activity type: see config.json file for potential outcomes
-        logger.info({ branchResult: "sent" }, "Returning success branch");
-        return res.status(200).json({ branchResult: "sent" });
+        // Send SMS via BitMessage API
+        const result = await sendBitMessageSMS(smsPayload);
+
+        if (result.success) {
+          logger.info({ branchResult: "sent" }, "Returning success branch");
+          return res.status(200).json({ branchResult: "sent" });
+        } else {
+          logger.warn({ branchResult: "notsent" }, "Returning failure branch");
+          return res.status(200).json({ branchResult: "notsent" });
+        }
       } else {
         logger.warn("Invalid inArguments");
         return res.status(200).json({ branchResult: "notsent" });
@@ -63,12 +108,10 @@ export async function execute(req, res) {
  * POST Handler for /publish/ route of Activity.
  */
 export async function publish(req, res) {
-  // Prevent caching
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.set("Pragma", "no-cache");
-  res.set("Expires", "0");
-
-  logger.info({ endpoint: "/publish", body: req.body }, "Publish event received");
+  logger.info(
+    { endpoint: "/publish", body: req.body },
+    "Publish event received",
+  );
   res.send(200, "Publish");
 }
 
@@ -76,12 +119,10 @@ export async function publish(req, res) {
  * POST Handler for /validate/ route of Activity.
  */
 export async function validate(req, res) {
-  // Prevent caching
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.set("Pragma", "no-cache");
-  res.set("Expires", "0");
-
-  logger.info({ endpoint: "/validate", body: req.body }, "Validate event received");
+  logger.info(
+    { endpoint: "/validate", body: req.body },
+    "Validate event received",
+  );
   res.send(200, "Validate");
 }
 
@@ -89,11 +130,6 @@ export async function validate(req, res) {
  * POST Handler for / route of Activity (this is the edit route).
  */
 export async function edit(req, res) {
-  // Prevent caching
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.set("Pragma", "no-cache");
-  res.set("Expires", "0");
-
   logger.info({ endpoint: "/edit", body: req.body }, "Edit event received");
   res.send(200, "Edit");
 }
@@ -102,11 +138,6 @@ export async function edit(req, res) {
  * POST Handler for /save/ route of Activity.
  */
 export async function save(req, res) {
-  // Prevent caching
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.set("Pragma", "no-cache");
-  res.set("Expires", "0");
-
   logger.info({ endpoint: "/save", body: req.body }, "Save event received");
   res.send(200, "Save");
 }
@@ -115,11 +146,6 @@ export async function save(req, res) {
  * POST Handler for /stop/ route of Activity.
  */
 export async function stop(req, res) {
-  // Prevent caching
-  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.set("Pragma", "no-cache");
-  res.set("Expires", "0");
-
   logger.info({ endpoint: "/stop", body: req.body }, "Stop event received");
   res.send(200, "Stop");
 }

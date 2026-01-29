@@ -9,7 +9,7 @@
   "key": "mi-activity-v2",
   "lang": {
     "en-US": {
-      "name": "SMS BitMessage v2.0",
+      "name": "SMS BitMessage v2.1",
       "description": "Envía SMS vía BitMessage con SFMC",
       "step1Label": "Configure Activity"
     }
