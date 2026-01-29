@@ -6,6 +6,7 @@
     "category": "message v 2.0"
   },
   "type": "RESTDECISION",
+  "key": "mi-activity-v2",
   "lang": {
     "en-US": {
       "name": "SMS BitMessage v2.0",
