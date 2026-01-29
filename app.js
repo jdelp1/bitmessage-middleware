@@ -1,3 +1,6 @@
+// Load environment variables
+import "dotenv/config";
+
 // Module Dependencies
 // -------------------
 import express from "express";
