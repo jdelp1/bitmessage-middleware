@@ -131,10 +131,8 @@ define(["postmonger"], function (Postmonger) {
         elements.campaignError.style.display = "block";
       }
       isValid = false;
-    } else {
-      if (elements.campaignError) {
-        elements.campaignError.style.display = "none";
-      }
+    } else if (elements.campaignError) {
+      elements.campaignError.style.display = "none";
     }
 
     // Validate message body
@@ -143,10 +141,8 @@ define(["postmonger"], function (Postmonger) {
         elements.messageBodyError.style.display = "block";
       }
       isValid = false;
-    } else {
-      if (elements.messageBodyError) {
-        elements.messageBodyError.style.display = "none";
-      }
+    } else if (elements.messageBodyError) {
+      elements.messageBodyError.style.display = "none";
     }
 
     if (!isValid) {
