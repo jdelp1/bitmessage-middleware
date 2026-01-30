@@ -120,12 +120,10 @@ define(["postmonger"], function (Postmonger) {
   }
 
   function save() {
-    // Here's is where you can validate your attributes before saving the activity
     const campaignValue = elements.campaignReference?.value?.trim() || "";
     const messageBodyValue = elements.messageBody?.value?.trim() || "";
     let isValid = true;
 
-    // Validate campaign reference
     if (!campaignValue) {
       if (elements.campaignError) {
         elements.campaignError.style.display = "block";
@@ -135,7 +133,6 @@ define(["postmonger"], function (Postmonger) {
       elements.campaignError.style.display = "none";
     }
 
-    // Validate message body
     if (!messageBodyValue) {
       if (elements.messageBodyError) {
         elements.messageBodyError.style.display = "block";
@@ -153,7 +150,6 @@ define(["postmonger"], function (Postmonger) {
         message: messageBodyValue,
       };
 
-      // This is how you save execute arguments in the activity.
       payload.arguments.execute.inArguments = [arg];
       payload.metaData.isConfigured = true;
 

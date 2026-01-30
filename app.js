@@ -33,8 +33,14 @@ app.use((req, res, next) => {
 });
 
 // Serve static files for each activity
-app.use("/instant-sms", express.static(path.join(__dirname, "public/instant-sms")));
-app.use("/scheduled-sms", express.static(path.join(__dirname, "public/scheduled-sms")));
+app.use(
+  "/instant-sms",
+  express.static(path.join(__dirname, "public/instant-sms")),
+);
+app.use(
+  "/scheduled-sms",
+  express.static(path.join(__dirname, "public/scheduled-sms")),
+);
 
 // Express in Development Mode
 if ("development" == app.get("env")) {

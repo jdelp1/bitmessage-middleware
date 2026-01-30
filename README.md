@@ -1,9 +1,5 @@
 # Journey Builder Activity Template
 
-### Starter template for a messaging JB Activity using Node.JS
-
-**NOTE:** This app and the associated code is NOT production quality, its pure purpose is to demonstrate the full flow of custom interactions in Journey Builder
-
 ### Pre-Requisites
 
 - Node.js (if you'd like to test locally)
@@ -17,12 +13,11 @@
 This guide covers Heroku, skip this step if you are familiar on how to deploy a Node.js app
 
 1. Fork and Clone this repository
-2. Login into [Heroku](https://heroku.com)
-3. Click on New > Create new app
-4. Give a name to the app and click on "Create App"
-5. Choose your preferred deployment method (Github or Heroku Cli are nice to work with)
-6. Deploy your code based on the selected deployment method
-7. Once your code is deployed, open the app url and verify you can see the UI for the activity
+2. Click on New > Create new app
+3. Give a name to the app and click on "Create App"
+4. Choose your preferred deployment method (Github or Heroku Cli are nice to work with)
+5. Deploy your code based on the selected deployment method
+6. Once your code is deployed, open the app url and verify you can see the UI for the activity
 
 #### Step 2. Configure your package in Marketing Cloud
 
