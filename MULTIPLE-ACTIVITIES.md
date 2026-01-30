@@ -36,24 +36,28 @@ BITMESSAGE_CAMPANYA=SOIB
 PORT=3000
 
 # APIs específicas
-BITMESSAGE_INSTANT_SMS_API=https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/mensaje/send
+BITMESSAGE_INSTANT_SMS_API=https://bitmessage.fundaciobit.org/api/v1/envios/mensaje/send
 BITMESSAGE_SCHEDULED_SMS_API=https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/sendfile
 ```
 
 ## 📝 Cómo Registrar Actividades en Journey Builder
 
 ### Actividad 1: Instant SMS
+
 **URL a registrar:** `https://site--custom-activity--974pyfp922mc.code.run/instant-sms`
 
 Journey Builder automáticamente:
+
 - Leerá `public/instant-sms/config.json`
 - Mostrará `public/instant-sms/index.html` como modal de configuración
 - Llamará a endpoints `/instant-sms/execute`, `/instant-sms/save`, etc.
 
 ### Actividad 2: Scheduled SMS
+
 **URL a registrar:** `https://site--custom-activity--974pyfp922mc.code.run/scheduled-sms`
 
 Journey Builder automáticamente:
+
 - Leerá `public/scheduled-sms/config.json`
 - Mostrará `public/scheduled-sms/index.html` como modal de configuración
 - Llamará a endpoints `/scheduled-sms/execute`, `/scheduled-sms/save`, etc.
@@ -61,19 +65,24 @@ Journey Builder automáticamente:
 ## ➕ Agregar Nuevas Actividades
 
 ### Paso 1: Crear estructura de carpetas
+
 ```powershell
 mkdir public\nueva-actividad
 Copy-Item public\instant-sms\* public\nueva-actividad\ -Recurse
 ```
 
 ### Paso 2: Crear archivo de rutas
+
 Copiar `routes/activities/instant-sms.js` → `routes/activities/nueva-actividad.js`
+
 - Actualizar nombre de funciones en logs
 - Modificar lógica de `sendAPI()` según API correspondiente
 - Ajustar branch results según necesidades
 
 ### Paso 3: Actualizar config.json
+
 Editar `public/nueva-actividad/config.json`:
+
 - `key`: "nueva-actividad-unique-key"
 - `name`: "Nombre de Nueva Actividad"
 - `description`: "Descripción clara"
@@ -81,11 +90,15 @@ Editar `public/nueva-actividad/config.json`:
 - `outcomes`: ajustar según branch results
 
 ### Paso 4: Actualizar app.js
+
 ```javascript
 import * as nuevaActividad from "./routes/activities/nueva-actividad.js";
 
 // Servir archivos estáticos
-app.use("/nueva-actividad", express.static(path.join(__dirname, "public/nueva-actividad")));
+app.use(
+  "/nueva-actividad",
+  express.static(path.join(__dirname, "public/nueva-actividad")),
+);
 
 // Rutas
 app.post("/nueva-actividad/save", nuevaActividad.save);
@@ -97,23 +110,28 @@ app.post("/nueva-actividad/edit", nuevaActividad.edit);
 ```
 
 ### Paso 5: Agregar variables de entorno
+
 Si la nueva actividad requiere URL de API diferente:
+
 ```env
 BITMESSAGE_NUEVA_API=https://api-url-here.com
 ```
 
 ### Paso 6: Registrar en Journey Builder
+
 URL: `https://site--custom-activity--974pyfp922mc.code.run/nueva-actividad`
 
 ## 🧪 Testing
 
 ### Probar Instant SMS localmente:
+
 ```
 URL: http://localhost:3000/instant-sms
 Execute: POST http://localhost:3000/instant-sms/execute
 ```
 
 ### Probar Scheduled SMS localmente:
+
 ```
 URL: http://localhost:3000/scheduled-sms
 Execute: POST http://localhost:3000/scheduled-sms/execute
@@ -122,7 +140,7 @@ Execute: POST http://localhost:3000/scheduled-sms/execute
 ## ✅ Estado Actual
 
 - ✅ Instant SMS: Totalmente funcional
-- 🚧 Scheduled SMS: Estructura creada, pendiente URL correcta de API
+- ✅ Scheduled SMS: Estructura completa, URL de API definida
 - 🔄 Otras actividades: Plantilla lista para replicar
 
 ## 📌 Notas Importantes
