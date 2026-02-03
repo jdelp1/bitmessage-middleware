@@ -210,7 +210,8 @@ import "dotenv/config";
 
 // Module Dependencies
 import express from "express";
-import bodyParser from "body-parser";
+import compression from "compression";
+import helmet from "helmet";
 import errorhandler from "errorhandler";
 import http from "http";
 import path from "path";
@@ -222,20 +223,42 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-var app = express();
+const app = express();
 
-// Configure Express
+// Performance & Security Middlewares
 app.set("port", process.env.PORT || 3000);
-app.use(bodyParser.raw({ type: "application/jwt" })); // Para JWT de SFMC
-app.use(bodyParser.json()); // Para JSON general
-app.use(bodyParser.urlencoded({ extended: true })); // Para formularios
+app.set("trust proxy", 1);
+app.use(helmet());
+app.use(compression());
+app.use(express.raw({ type: "application/jwt" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// Prevent caching of static files
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.set("Pragma", "no-cache");
+  res.set("Expires", "0");
+  next();
+});
+
+app.use(
+  "/instant-sms",
+  express.static(path.join(__dirname, "public/instant-sms")),
+);
+
+app.use(
+  "/scheduled-sms",
+  express.static(path.join(__dirname, "public/scheduled-sms")),
+);
 ```
 
 **Puntos clave de la configuración**:
 
 - Usa ES6 modules (`type: "module"` en package.json)
 - Carga variables de entorno con `dotenv/config`
-- Tres parsers diferentes para manejar JWT, JSON y URL-encoded
+- Usa helmet y compression para seguridad y rendimiento
+- Usa los parsers nativos de Express para manejar JWT, JSON y URL-encoded (con límites de tamaño configurados)
 - Puerto configurable via variable de entorno
 
 ### Prevención de Caché
