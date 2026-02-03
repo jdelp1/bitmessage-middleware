@@ -1,7 +1,13 @@
-// Deps
+// =====================
+// Imports & Dependencies
+// =====================
 import axios from "axios";
 import JWT from "../../lib/jwtDecoder.js";
 import logger from "../../utils/logger.js";
+
+// =====================
+// Utility Functions
+// =====================
 
 /**
  * Sends Scheduled SMS via BitMessage API
@@ -58,6 +64,30 @@ async function sendScheduledSMS(payload) {
       "BitMessage Scheduled SMS API call failed",
     );
     return { success: false, error };
+  }
+}
+
+// =====================
+// Route Handlers
+// =====================
+
+/*
+ * POST Handler for /receive-json/ route of Activity.
+ */
+export async function receiveJson(req, res) {
+  // Set timeout to 60 seconds for this request
+  req.setTimeout(60000);
+  logger.info(
+    { endpoint: "/scheduled-sms/receive-json", body: req.body },
+    "Scheduled SMS Receive JSON event received",
+  );
+  try {
+    // TODO: Add business logic for received JSON
+    logger.info("respuesta ok");
+    res.status(200).json({ success: true, received: req.body });
+  } catch (err) {
+    logger.error({ err }, "Error in /scheduled-sms/receive-json endpoint");
+    res.status(500).json({ success: false, error: err.message });
   }
 }
 

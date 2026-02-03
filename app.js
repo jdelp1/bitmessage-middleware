@@ -61,7 +61,11 @@ app.post("/scheduled-sms/validate", scheduledSms.validate);
 app.post("/scheduled-sms/publish", scheduledSms.publish);
 app.post("/scheduled-sms/execute", scheduledSms.execute);
 app.post("/scheduled-sms/stop", scheduledSms.stop);
+
 app.post("/scheduled-sms/edit", scheduledSms.edit);
+
+// New endpoint: Receives POST with JSON body
+app.post("/scheduled-sms/receive-json", scheduledSms.receiveJson);
 
 http.createServer(app).listen(app.get("port"), function () {
   console.log("Express server listening on port " + app.get("port"));
