@@ -23,17 +23,17 @@ Este middleware es un servidor Express.js que permite a los usuarios de Salesfor
 ### Diagrama de Flujo General
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│              Salesforce Marketing Cloud (SFMC)                      │
-│                      Journey Builder                                │
-│                                                                      │
+┌────────────────────────────────────────────────────────────────────┐
+│              Salesforce Marketing Cloud (SFMC)                     │
+│                      Journey Builder                               │
+│                                                                    │
 │  ┌────────────────────────────────────────────────────────────┐    │
 │  │  Journey Canvas                                            │    │
 │  │  - Actividad: "Envío instantáneo BitMessage"               │    │
 │  │  - Actividad: "Envío programado BitMessage"                │    │
 │  │  - Data Extensions con contactos y atributos               │    │
 │  └────────────────────────────────────────────────────────────┘    │
-└────────────────────────────┬────────────────────────────────────────┘
+└────────────────────────────┬───────────────────────────────────────┘
                              │
                              │ HTTPS POST (JWT firmado)
                              │ Body: Token con inArguments
