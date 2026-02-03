@@ -4,7 +4,8 @@ import "dotenv/config";
 // Module Dependencies
 // -------------------
 import express from "express";
-import bodyParser from "body-parser";
+import compression from "compression";
+import helmet from "helmet";
 import errorhandler from "errorhandler";
 import http from "http";
 import path from "path";
@@ -16,13 +17,16 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-var app = express();
+const app = express();
 
-// Configure Express
+// Performance & Security Middlewares
 app.set("port", process.env.PORT || 3000);
-app.use(bodyParser.raw({ type: "application/jwt" }));
-app.use(bodyParser.json({ limit: "100mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
+app.set("trust proxy", 1);
+app.use(helmet());
+app.use(compression());
+app.use(express.raw({ type: "application/jwt" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Prevent caching of static files
 app.use((req, res, next) => {
@@ -32,18 +36,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static files for each activity
 app.use(
   "/instant-sms",
   express.static(path.join(__dirname, "public/instant-sms")),
 );
+
 app.use(
   "/scheduled-sms",
   express.static(path.join(__dirname, "public/scheduled-sms")),
 );
 
-// Express in Development Mode
-if ("development" == app.get("env")) {
+// Development Mode
+if (app.get("env") === "development") {
   app.use(errorhandler());
 }
 
@@ -61,12 +65,11 @@ app.post("/scheduled-sms/validate", scheduledSms.validate);
 app.post("/scheduled-sms/publish", scheduledSms.publish);
 app.post("/scheduled-sms/execute", scheduledSms.execute);
 app.post("/scheduled-sms/stop", scheduledSms.stop);
-
 app.post("/scheduled-sms/edit", scheduledSms.edit);
 
-// New endpoint: Receives POST with JSON body
+// ===== Scheduled SMS Receive JSON Route =====
 app.post("/scheduled-sms/receive-json", scheduledSms.receiveJson);
 
-http.createServer(app).listen(app.get("port"), function () {
-  console.log("Express server listening on port " + app.get("port"));
+http.createServer(app).listen(app.get("port"), () => {
+  console.log(`Express server listening on port ${app.get("port")}`);
 });
