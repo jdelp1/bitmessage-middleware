@@ -21,8 +21,8 @@ var app = express();
 // Configure Express
 app.set("port", process.env.PORT || 3000);
 app.use(bodyParser.raw({ type: "application/jwt" }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "100mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 
 // Prevent caching of static files
 app.use((req, res, next) => {
