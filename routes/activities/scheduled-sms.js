@@ -19,20 +19,19 @@ async function sendScheduledSMSFile(data, campanya) {
   });
   const fileContent = lines.join("\n");
 
-  // Write to a temporary file
-  const tmpDir = os.tmpdir();
+  // Write file directly to public/tmp for web access
+  const publicTmpDir = path.join(process.cwd(), "public", "tmp");
+  // Ensure public/tmp directory exists
+  if (!fs.existsSync(publicTmpDir)) {
+    fs.mkdirSync(publicTmpDir, { recursive: true });
+  }
   const tempFileName = `scheduled-sms-${Date.now()}.txt`;
-  const filePath = path.join(tmpDir, tempFileName);
+  const filePath = path.join(publicTmpDir, tempFileName);
   fs.writeFileSync(filePath, fileContent, "utf8");
   logger.info(
     { filePath, fileContentPreview: fileContent.slice(0, 500) },
-    "Scheduled SMS file generated",
+    "Scheduled SMS file generated in public/tmp",
   );
-
-  // Move file to public/tmp for web access
-  const publicTmpDir = path.join(process.cwd(), "public", "tmp");
-  const publicFilePath = path.join(publicTmpDir, tempFileName);
-  fs.copyFileSync(filePath, publicFilePath);
 
   try {
     // Prepare multipart/form-data
@@ -61,22 +60,18 @@ async function sendScheduledSMSFile(data, campanya) {
 
     // If BitMessage call is commented out, just return success for file generation
     logger.info(
-      { filePath: publicFilePath, fileGenerated: true },
-      "Scheduled SMS file moved to public/tmp (BitMessage call skipped)",
+      { filePath, fileGenerated: true },
+      "Scheduled SMS file generated in public/tmp (BitMessage call skipped)",
     );
     // Return public URL for file
     const publicUrl = `/tmp/${tempFileName}`;
-    return { success: true, filePath: publicFilePath, url: publicUrl };
+    return { success: true, filePath, url: publicUrl };
   } catch (error) {
     logger.error(
       { err: error, response: error.response?.data },
       "BitMessage Scheduled SMS file send failed",
     );
     return { success: false, error };
-  } finally {
-    // Clean up temp file
-    fs.unlinkSync(filePath);
-    // Do not delete publicFilePath so it remains accessible
   }
 }
 
