@@ -11,8 +11,6 @@ import FormData from "form-data";
 async function sendScheduledSMSFile(data, campanya) {
   // Generate file content
   const lines = data.map((obj) => {
-    // You may want to customize the message per object if needed
-    // Here, as an example, we use a static message or a field from the object
     const tipo = obj.TIPO_ENVIO || "";
     const hora = obj.HORA_DEFECTO || obj.HORA || "";
     const telefono = obj.TELEFONO || "";
@@ -25,6 +23,7 @@ async function sendScheduledSMSFile(data, campanya) {
   const tmpDir = os.tmpdir();
   const filePath = path.join(tmpDir, `scheduled-sms-${Date.now()}.txt`);
   fs.writeFileSync(filePath, fileContent, "utf8");
+  logger.info({ filePath, fileContentPreview: fileContent.slice(0, 500) }, "Scheduled SMS file generated");
 
   try {
     // Prepare multipart/form-data
@@ -35,7 +34,8 @@ async function sendScheduledSMSFile(data, campanya) {
     });
 
     // Compose URL with campanya param
-    const url = `${process.env.BITMESSAGE_SCHEDULED_SMS_API}?campanya=${encodeURIComponent(campanya)}`;
+    const url = `https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/sendfile?campanya=${encodeURIComponent(campanya)}`;
+    logger.info({ url }, "Sending scheduled SMS file to BitMessage");
 
     // Send request
     const response = await axios.post(url, form, {
