@@ -21,12 +21,18 @@ async function sendScheduledSMSFile(data, campanya) {
 
   // Write to a temporary file
   const tmpDir = os.tmpdir();
-  const filePath = path.join(tmpDir, `scheduled-sms-${Date.now()}.txt`);
+  const tempFileName = `scheduled-sms-${Date.now()}.txt`;
+  const filePath = path.join(tmpDir, tempFileName);
   fs.writeFileSync(filePath, fileContent, "utf8");
   logger.info(
     { filePath, fileContentPreview: fileContent.slice(0, 500) },
     "Scheduled SMS file generated",
   );
+
+  // Move file to public/tmp for web access
+  const publicTmpDir = path.join(process.cwd(), "public", "tmp");
+  const publicFilePath = path.join(publicTmpDir, tempFileName);
+  fs.copyFileSync(filePath, publicFilePath);
 
   try {
     // Prepare multipart/form-data
@@ -55,10 +61,12 @@ async function sendScheduledSMSFile(data, campanya) {
 
     // If BitMessage call is commented out, just return success for file generation
     logger.info(
-      { filePath, fileGenerated: true },
-      "Scheduled SMS file generated (BitMessage call skipped)",
+      { filePath: publicFilePath, fileGenerated: true },
+      "Scheduled SMS file moved to public/tmp (BitMessage call skipped)",
     );
-    return { success: true, filePath };
+    // Return public URL for file
+    const publicUrl = `/tmp/${tempFileName}`;
+    return { success: true, filePath: publicFilePath, url: publicUrl };
   } catch (error) {
     logger.error(
       { err: error, response: error.response?.data },
@@ -68,6 +76,7 @@ async function sendScheduledSMSFile(data, campanya) {
   } finally {
     // Clean up temp file
     fs.unlinkSync(filePath);
+    // Do not delete publicFilePath so it remains accessible
   }
 }
 
