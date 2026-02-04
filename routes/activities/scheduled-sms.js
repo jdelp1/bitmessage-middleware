@@ -79,13 +79,6 @@ export async function receiveJsonFile(req, res) {
   }
 }
 // =====================
-// Imports & Dependencies
-// =====================
-import axios from "axios";
-import JWT from "../../lib/jwtDecoder.js";
-import logger from "../../utils/logger.js";
-
-// =====================
 // Utility Functions
 // =====================
 
