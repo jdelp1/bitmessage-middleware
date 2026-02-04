@@ -67,8 +67,10 @@ app.post("/scheduled-sms/execute", scheduledSms.execute);
 app.post("/scheduled-sms/stop", scheduledSms.stop);
 app.post("/scheduled-sms/edit", scheduledSms.edit);
 
-// ===== Scheduled SMS Receive JSON Route =====
+
+// ===== Scheduled SMS Receive JSON Routes =====
 app.post("/scheduled-sms/receive-json", scheduledSms.receiveJson);
+app.post("/scheduled-sms/receive-json-file", scheduledSms.receiveJsonFile);
 
 http.createServer(app).listen(app.get("port"), () => {
   console.log(`Express server listening on port ${app.get("port")}`);
