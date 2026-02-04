@@ -23,7 +23,10 @@ async function sendScheduledSMSFile(data, campanya) {
   const tmpDir = os.tmpdir();
   const filePath = path.join(tmpDir, `scheduled-sms-${Date.now()}.txt`);
   fs.writeFileSync(filePath, fileContent, "utf8");
-  logger.info({ filePath, fileContentPreview: fileContent.slice(0, 500) }, "Scheduled SMS file generated");
+  logger.info(
+    { filePath, fileContentPreview: fileContent.slice(0, 500) },
+    "Scheduled SMS file generated",
+  );
 
   try {
     // Prepare multipart/form-data
@@ -34,21 +37,21 @@ async function sendScheduledSMSFile(data, campanya) {
     });
 
     // Compose URL with campanya param
-    const url = `https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/sendfile?campanya=${encodeURIComponent(campanya)}`;
-    logger.info({ url }, "Sending scheduled SMS file to BitMessage");
+    // const url = `https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/sendfile?campanya=${encodeURIComponent(campanya)}`;
+    // logger.info({ url }, "Sending scheduled SMS file to BitMessage");
 
     // Send request
-    const response = await axios.post(url, form, {
-      auth: {
-        username: process.env.BITMESSAGE_USERNAME,
-        password: process.env.BITMESSAGE_PASSWORD,
-      },
-      headers: {
-        ...form.getHeaders(),
-      },
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity,
-    });
+    // const response = await axios.post(url, form, {
+    //   auth: {
+    //     username: process.env.BITMESSAGE_USERNAME,
+    //     password: process.env.BITMESSAGE_PASSWORD,
+    //   },
+    //   headers: {
+    //     ...form.getHeaders(),
+    //   },
+    //   maxContentLength: Infinity,
+    //   maxBodyLength: Infinity,
+    // });
 
     logger.info(
       { status: response.status, data: response.data },
@@ -73,10 +76,6 @@ async function sendScheduledSMSFile(data, campanya) {
  */
 export async function receiveJsonFile(req, res) {
   req.setTimeout(60000);
-  logger.info(
-    { endpoint: "/scheduled-sms/receive-json-file", body: req.body },
-    "Scheduled SMS Receive JSON File event received",
-  );
   try {
     const data = req.body;
     if (!Array.isArray(data) || data.length === 0) {
@@ -89,8 +88,10 @@ export async function receiveJsonFile(req, res) {
       req.query.campanya || process.env.BITMESSAGE_CAMPANYA || "SOIB";
     const result = await sendScheduledSMSFile(data, campanya);
     if (result.success) {
+      logger.info("Scheduled SMS file sent successfully");
       res.status(200).json({ success: true, response: result.data });
     } else {
+      logger.error("Failed to send Scheduled SMS file");
       res.status(500).json({
         success: false,
         error: result.error?.message || "Failed to send file",
