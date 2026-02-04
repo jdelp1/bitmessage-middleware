@@ -46,6 +46,12 @@ app.use(
   express.static(path.join(__dirname, "public/scheduled-sms")),
 );
 
+// Serve files from public/tmp at /tmp URL path
+app.use(
+  "/tmp",
+  express.static(path.join(__dirname, "public/tmp")),
+);
+
 // Development Mode
 if (app.get("env") === "development") {
   app.use(errorhandler());
