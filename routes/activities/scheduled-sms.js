@@ -53,11 +53,12 @@ async function sendScheduledSMSFile(data, campanya) {
     //   maxBodyLength: Infinity,
     // });
 
+    // If BitMessage call is commented out, just return success for file generation
     logger.info(
-      { status: response.status, data: response.data },
-      "BitMessage Scheduled SMS file sent",
+      { filePath, fileGenerated: true },
+      "Scheduled SMS file generated (BitMessage call skipped)",
     );
-    return { success: true, data: response.data };
+    return { success: true, filePath };
   } catch (error) {
     logger.error(
       { err: error, response: error.response?.data },
