@@ -11,24 +11,17 @@ const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
+// Generic formatter for all formats (expects array of values)
+const smsFormatter = (arr) => arr.join("|");
+
 const generateSMSFile = (data, fileName) => {
   ensureDir(PUBLIC_TMP);
-  const content = data
-    .map(
-      ({
-        TIPO_ENVIO = "",
-        HORA_DEFECTO = "",
-        HORA = "",
-        TELEFONO = "",
-        MENSAJE = "MENSAJE",
-      }) => `TIPO_ENVIO|${TIPO_ENVIO}|${TELEFONO}|${MENSAJE}`,
-    )
-    .join("\n");
+  const content = data.map(smsFormatter).join("\n");
   const filePath = path.join(PUBLIC_TMP, fileName);
   fs.writeFileSync(filePath, content, "utf8");
   logger.info(
     { filePath, fileContentPreview: content.slice(0, 500) },
-    "Scheduled SMS file generated",
+    `Scheduled SMS file generated`,
   );
   return filePath;
 };
@@ -57,15 +50,17 @@ export async function sendScheduledSMSFile(data, campanya) {
 
 /*
  * POST Handler for /receive-json-file/ route of Activity.
- * Receives a large JSON, generates a txt file, and sends it to BitMessage
+ * Receives JSON array, generates the txt file (sendScheduledSMSFile), sends it to BitMessage.
  */
 export async function receiveJsonFile(req, res) {
   req.setTimeout(60000);
   const data = req.body;
-  if (!Array.isArray(data) || !data.length)
+
+  if (!Array.isArray(data) || !data.length) {
     return res
       .status(400)
       .json({ success: false, error: "Invalid or empty JSON array" });
+  }
 
   const campanya =
     req.query.campanya || process.env.BITMESSAGE_CAMPANYA || "SOIB";
@@ -78,6 +73,7 @@ export async function receiveJsonFile(req, res) {
     res.status(500).json({ success: false, error: err.message });
   }
 }
+
 // =====================
 // Utility Functions
 // =====================
@@ -120,18 +116,6 @@ async function sendScheduledSMS(payload) {
 // =====================
 
 /*
- * POST Handler for /receive-json/ route of Activity.
- */
-export async function receiveJson(req, res) {
-  req.setTimeout(60000);
-  logger.info(
-    { endpoint: "/scheduled-sms/receive-json", body: req.body },
-    "Scheduled SMS Receive JSON event received",
-  );
-  res.status(200).json({ success: true, received: req.body });
-}
-
-/*
  * POST Handler for /execute/ route of Activity.
  */
 export async function execute(req, res) {
@@ -140,9 +124,13 @@ export async function execute(req, res) {
     "Scheduled SMS Execute endpoint called",
   );
   JWT(req.body, process.env.jwtSecret, async (err, decoded) => {
-    if (err) return res.status(401).end();
+    if (err) {
+      return res.status(401).end();
+    }
     const args = decoded?.inArguments?.[0];
-    if (!args) return res.status(200).json({ branchResult: "failed" });
+    if (!args) {
+      return res.status(200).json({ branchResult: "failed" });
+    }
 
     const smsPayload = {
       telefono: args.telefono || args.phone,
