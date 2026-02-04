@@ -37,7 +37,7 @@ export async function sendScheduledSMSFile(data, campanya) {
     return { success: false, error: "Failed to generate SMS file" };
   }
 
-  // Uncomment below to send to BitMessage
+  // TODO: Codigo para realizar el envio a BietMessage desactivado temporalmente
   // let bitMessageResponse;
   // try {
   //   const form = new FormData();
@@ -87,12 +87,10 @@ export async function receiveJsonFile(req, res) {
       return res.status(200).json({ success: true, response: result });
     } else {
       logger.error({ result }, "sendScheduledSMSFile did not return success");
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error: result && result.error ? result.error : "Unknown error",
-        });
+      return res.status(500).json({
+        success: false,
+        error: result && result.error ? result.error : "Unknown error",
+      });
     }
   } catch (err) {
     logger.error({ err }, "Error in /scheduled-sms/receive-json-file endpoint");
