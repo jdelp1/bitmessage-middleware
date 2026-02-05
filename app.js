@@ -47,7 +47,14 @@ app.use(
 );
 
 // Serve files from public/tmp at /tmp URL path
-app.use("/tmp", express.static(path.join(__dirname, "public/tmp")));
+app.use(
+  "/tmp",
+  (req, res, next) => {
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    next();
+  },
+  express.static(path.join(__dirname, "public/tmp")),
+);
 
 // Development Mode
 if (app.get("env") === "development") {
