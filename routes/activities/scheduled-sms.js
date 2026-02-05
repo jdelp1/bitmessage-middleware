@@ -11,17 +11,18 @@ const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
-// Generic formatter for all formats (expects array of values)
-const smsFormatter = (arr) => {
-  if (!Array.isArray(arr)) {
-    logger.warn({ arr }, "smsFormatter received non-array value");
-    return String(arr);
+// Formatter for each object: join its values by '|'
+const smsFormatter = (obj) => {
+  if (typeof obj !== "object" || obj === null) {
+    logger.warn({ obj }, "smsFormatter received non-object value");
+    return String(obj);
   }
-  return arr.join("|");
+  return Object.values(obj).join("|");
 };
 
 const generateSMSFile = (data, fileName) => {
   ensureDir(PUBLIC_TMP);
+  // Expect data to be array of objects
   const content = data.map(smsFormatter).join("\n");
   const filePath = path.join(PUBLIC_TMP, fileName);
   fs.writeFileSync(filePath, content, "utf8");
