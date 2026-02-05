@@ -12,7 +12,13 @@ const ensureDir = (dir) => {
 };
 
 // Generic formatter for all formats (expects array of values)
-const smsFormatter = (arr) => arr.join("|");
+const smsFormatter = (arr) => {
+  if (!Array.isArray(arr)) {
+    logger.warn({ arr }, "smsFormatter received non-array value");
+    return String(arr);
+  }
+  return arr.join("|");
+};
 
 const generateSMSFile = (data, fileName) => {
   ensureDir(PUBLIC_TMP);
