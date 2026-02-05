@@ -42,25 +42,6 @@ function isValidSMSData(data) {
 
 // Main orchestrator: validates, generates file, returns result
 export async function sendScheduledSMSFile(data, campanya) {
-  // Uncomment below to send to BitMessage as multipart/form-data
-  // let bitMessageResponse;
-  // try {
-  //   const form = new FormData();
-  //   form.append("file", fs.createReadStream(filePath), { filename: fileName, contentType: "text/plain" });
-  //   const url = `https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/sendfile?campanya=${encodeURIComponent(campanya)}`;
-  //   const response = await axios.post(url, form, {
-  //     auth: { username: process.env.BITMESSAGE_USERNAME, password: process.env.BITMESSAGE_PASSWORD },
-  //     headers: { ...form.getHeaders() },
-  //     maxContentLength: Infinity,
-  //     maxBodyLength: Infinity,
-  //   });
-  //   bitMessageResponse = response.data;
-  //   logger.info({ filePath, fileGenerated: true, bitMessageResponse }, "Scheduled SMS file sent to BitMessage");
-  //   return { success: true, filePath, url: `/tmp/${fileName}`, bitMessageResponse };
-  // } catch (error) {
-  //   logger.error({ filePath, error }, "Failed to send file to BitMessage");
-  //   return { success: false, filePath, url: `/tmp/${fileName}`, error: error.message };
-  // }
   if (!isValidSMSData(data)) {
     logger.error({ data }, "Input must be a non-empty array of objects");
     return {
