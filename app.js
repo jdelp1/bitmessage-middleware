@@ -1,4 +1,5 @@
-// Load environment variables
+// Load environment variables (only in development, Northflank provides them directly)
+// In production, dotenv will not find .env file and will skip loading
 import "dotenv/config";
 
 // Module Dependencies
