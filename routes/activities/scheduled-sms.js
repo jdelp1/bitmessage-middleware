@@ -23,7 +23,7 @@ function generateSMSFile(data, fileName) {
   const content = data.map(formatSMSLine).join("\n");
   const filePath = path.join(PUBLIC_TMP, fileName);
 
-  fs.writeFileSync(filePath, Buffer.from('\uFEFF' + content, 'utf8'));
+  fs.writeFileSync(filePath, Buffer.from("\uFEFF" + content, "utf8"));
   logger.info(
     { filePath, preview: content.slice(0, 500) },
     "Scheduled SMS file generated",
@@ -35,7 +35,7 @@ function generateSMSFile(data, fileName) {
 function isValidSMSData(data) {
   return (
     Array.isArray(data) &&
-    data.length > 0 &&
+    data.length &&
     data.every((obj) => obj && typeof obj === "object" && !Array.isArray(obj))
   );
 }
