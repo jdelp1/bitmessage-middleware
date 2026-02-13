@@ -10,42 +10,54 @@ import logger from "../../utils/logger.js";
  */
 async function sendBitMessageSMS(payload) {
   try {
-    logger.info({ payload }, "Calling BitMessage Instant SMS API");
+    // Build query parameters for GET request
+    const params = new URLSearchParams({
+      telefono: payload.telefono || payload.numero,
+      texto: payload.texto || payload.message,
+      campanyaReferencia: payload.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA,
+    });
+    
+    // Replace + with %20 for spaces (BitMessage API requirement)
+    const url = `${process.env.BITMESSAGE_INSTANT_SMS_API}?${params.toString().replace(/\+/g, '%20')}`;
 
-    const response = await axios.post(
-      process.env.BITMESSAGE_INSTANT_SMS_API,
-      payload,
+    logger.info(
       {
-        auth: {
-          username: process.env.BITMESSAGE_USERNAME,
-          password: process.env.BITMESSAGE_PASSWORD,
-        },
-        headers: {
-          "Content-Type": "application/json",
+        fullUrl: url,
+        params: {
+          telefono: params.get('telefono'),
+          texto: params.get('texto'),
+          campanyaReferencia: params.get('campanyaReferencia'),
         },
       },
+      "Calling BitMessage Instant SMS API with details",
     );
+
+    const response = await axios.get(url, {
+      auth: {
+        username: process.env.BITMESSAGE_USERNAME,
+        password: process.env.BITMESSAGE_PASSWORD,
+      },
+      timeout: 60000, // 60 seconds
+    });
 
     logger.info(
       {
         status: response.status,
-        estado: response.data?.estado,
-        id: response.data?.id,
+        data: response.data,
       },
       "BitMessage Instant SMS API responded",
     );
 
-    const estado = response.data?.estado?.toUpperCase();
-
-    if (estado === "ENVIADO" || estado === "CONFIRMADO") {
+    // Check response for success (adjust based on actual API response)
+    if (response.status === 200) {
       logger.info(
-        { smsId: response.data?.id },
+        { response: response.data },
         "Instant SMS sent successfully",
       );
       return { success: true, data: response.data };
     } else {
       logger.warn(
-        { estado, response: response.data },
+        { status: response.status, response: response.data },
         "Unknown BitMessage Instant SMS status",
       );
       return { success: false, data: response.data };

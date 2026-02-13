@@ -58,32 +58,60 @@ export async function sendScheduledSMSFile(data, campanya) {
     return { success: false, error: "Failed to generate SMS file" };
   }
 
-  // Uncomment below to send to BitMessage as multipart/form-data
-  // let bitMessageResponse;
-  // try {
-  //   const form = new FormData();
-  //   form.append("file", fs.createReadStream(filePath), { filename: fileName, contentType: "text/plain" });
-  //   const url = `https://bitmessage.fundaciobit.org/bitmessage/api/v1/envios/sendfile?campanya=${encodeURIComponent(campanya)}`;
-  //   const response = await axios.post(url, form, {
-  //     auth: { username: process.env.BITMESSAGE_USERNAME, password: process.env.BITMESSAGE_PASSWORD },
-  //     headers: { ...form.getHeaders() },
-  //     maxContentLength: Infinity,
-  //     maxBodyLength: Infinity,
-  //   });
-  //   bitMessageResponse = response.data;
-  //   logger.info({ filePath, fileGenerated: true, bitMessageResponse }, "Scheduled SMS file sent to BitMessage");
-  //   return { success: true, filePath, url: `/tmp/${fileName}`, bitMessageResponse };
-  // } catch (error) {
-  //   logger.error({ filePath, error }, "Failed to send file to BitMessage");
-  //   return { success: false, filePath, url: `/tmp/${fileName}`, error: error.message };
-  // }
+  // Send file to BitMessage as multipart/form-data
+  let bitMessageResponse;
+  try {
+    const form = new FormData();
+    form.append("file", fs.createReadStream(filePath), {
+      filename: fileName,
+      contentType: "text/plain",
+    });
 
-  logger.info(
-    { filePath, fileGenerated: true },
-    "Scheduled SMS file ready (BitMessage call skipped)",
-  );
+    const url = `${process.env.BITMESSAGE_SCHEDULED_SMS_API}?campanya=${encodeURIComponent(campanya)}`;
 
-  return { success: true, filePath, url: `/tmp/${fileName}` };
+    logger.info(
+      { url, campanya, fileName },
+      "Calling BitMessage Scheduled SMS API",
+    );
+
+    const response = await axios.post(url, form, {
+      auth: {
+        username: process.env.BITMESSAGE_USERNAME,
+        password: process.env.BITMESSAGE_PASSWORD,
+      },
+      headers: { ...form.getHeaders() },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      timeout: 60000, // 60 seconds
+    });
+
+    bitMessageResponse = response.data;
+    logger.info(
+      { filePath, fileGenerated: true, bitMessageResponse },
+      "Scheduled SMS file sent to BitMessage",
+    );
+    return {
+      success: true,
+      filePath,
+      url: `/tmp/${fileName}`,
+      bitMessageResponse,
+    };
+  } catch (error) {
+    logger.error({ filePath, error }, "Failed to send file to BitMessage");
+    return {
+      success: false,
+      filePath,
+      url: `/tmp/${fileName}`,
+      error: error.message,
+    };
+  }
+
+  // logger.info(
+  //   { filePath, fileGenerated: true },
+  //   "Scheduled SMS file ready (BitMessage call skipped)",
+  // );
+
+  // return { success: true, filePath, url: `/tmp/${fileName}` };
 }
 
 /*
@@ -113,7 +141,15 @@ export async function receiveJsonFile(req, res) {
 // Utility: Send Scheduled SMS via BitMessage API
 async function sendScheduledSMS(payload) {
   try {
-    logger.info({ payload }, "Calling BitMessage Scheduled SMS API");
+    logger.info(
+      {
+        url: process.env.BITMESSAGE_SCHEDULED_SMS_API,
+        username: process.env.BITMESSAGE_USERNAME,
+        payload: payload,
+        headers: { "Content-Type": "application/json" },
+      },
+      "Calling BitMessage Scheduled SMS API with details",
+    );
     const response = await axios.post(
       process.env.BITMESSAGE_SCHEDULED_SMS_API,
       payload,
@@ -123,6 +159,7 @@ async function sendScheduledSMS(payload) {
           password: process.env.BITMESSAGE_PASSWORD,
         },
         headers: { "Content-Type": "application/json" },
+        timeout: 60000, // 60 seconds
       },
     );
     const estado = response.data?.estado?.toUpperCase();
