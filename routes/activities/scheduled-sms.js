@@ -82,7 +82,7 @@ export async function sendScheduledSMSFile(data, campanya) {
       headers: { ...form.getHeaders() },
       maxContentLength: Infinity,
       maxBodyLength: Infinity,
-      timeout: 60000, // 60 seconds
+      timeout: 300000, // 5 minutes
     });
 
     bitMessageResponse = response.data;
@@ -159,7 +159,7 @@ async function sendScheduledSMS(payload) {
           password: process.env.BITMESSAGE_PASSWORD,
         },
         headers: { "Content-Type": "application/json" },
-        timeout: 60000, // 60 seconds
+        timeout: 300000, // 5 minutes
       },
     );
     const estado = response.data?.estado?.toUpperCase();
