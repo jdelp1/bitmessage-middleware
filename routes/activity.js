@@ -37,7 +37,6 @@ async function sendBitMessageSMS(payload) {
         username: process.env.BITMESSAGE_USERNAME,
         password: process.env.BITMESSAGE_PASSWORD,
       },
-      timeout: 300000, // 5 minutes
     });
 
     logger.info(
