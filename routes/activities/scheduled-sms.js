@@ -12,8 +12,22 @@ function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-// Format a single object as a line
+// Format a single object as a line for scheduled SMS
+// Expected format: fechaEnvio(dd/MM/yyyy)|horaEnvio(HH:mm)|telefono|texto
 function formatSMSLine(obj) {
+  if (obj.fechaEnvio) {
+    // Parse ISO date to dd/MM/yyyy and HH:mm
+    const date = new Date(obj.fechaEnvio);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${day}/${month}/${year}|${hours}:${minutes}|${obj.telefono}|${obj.texto}`;
+  }
+  
+  // Fallback for instant SMS (no fechaEnvio)
   return Object.values(obj).join("|");
 }
 
@@ -23,7 +37,8 @@ function generateSMSFile(data, fileName) {
   const content = data.map(formatSMSLine).join("\n");
   const filePath = path.join(PUBLIC_TMP, fileName);
 
-  fs.writeFileSync(filePath, Buffer.from("\uFEFF" + content, "utf8"));
+  // Write without BOM - BitMessage parser doesn't handle it correctly
+  fs.writeFileSync(filePath, content, "utf8");
   logger.info(
     { filePath, preview: content.slice(0, 500) },
     "Scheduled SMS file generated",
@@ -137,33 +152,54 @@ export async function receiveJsonFile(req, res) {
   }
 }
 
-// Utility: Send Scheduled SMS via BitMessage API
+// Utility: Send Scheduled SMS via BitMessage API (single SMS via file upload)
 async function sendScheduledSMS(payload) {
   try {
+    const campanya = payload.campanyaReferencia || "SOIB";
+    
+    // Generate a single-record file
+    const fileName = `scheduled-sms-${Date.now()}.txt`;
+    ensureDir(PUBLIC_TMP);
+    const content = formatSMSLine(payload);
+    const filePath = path.join(PUBLIC_TMP, fileName);
+    // Write without BOM - BitMessage parser doesn't handle it correctly
+    fs.writeFileSync(filePath, content, "utf8");
+    
     logger.info(
-      {
-        url: process.env.BITMESSAGE_SCHEDULED_SMS_API,
+      { filePath, content },
+      "Single scheduled SMS file generated",
+    );
+
+    // Upload file as multipart/form-data
+    const form = new FormData();
+    form.append("file", fs.createReadStream(filePath), {
+      filename: fileName,
+      contentType: "text/plain",
+    });
+
+    const url = `${process.env.BITMESSAGE_SCHEDULED_SMS_API}?campanya=${encodeURIComponent(campanya)}`;
+    
+    logger.info(
+      { url, campanya, fileName, payload },
+      "Calling BitMessage Scheduled SMS API with file",
+    );
+
+    const response = await axios.post(url, form, {
+      auth: {
         username: process.env.BITMESSAGE_USERNAME,
-        payload: payload,
-        headers: { "Content-Type": "application/json" },
+        password: process.env.BITMESSAGE_PASSWORD,
       },
-      "Calling BitMessage Scheduled SMS API with details",
-    );
-    const response = await axios.post(
-      process.env.BITMESSAGE_SCHEDULED_SMS_API,
-      payload,
-      {
-        auth: {
-          username: process.env.BITMESSAGE_USERNAME,
-          password: process.env.BITMESSAGE_PASSWORD,
-        },
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+      headers: { ...form.getHeaders() },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    });
+
     const estado = response.data?.estado?.toUpperCase();
     return {
       success: estado === "PROGRAMADO" || estado === "ENVIADO",
       data: response.data,
+      filePath,
+      url: `/tmp/${fileName}`,
     };
   } catch (error) {
     logger.error(
@@ -189,18 +225,48 @@ export async function execute(req, res) {
   );
   JWT(req.body, process.env.jwtSecret, async (err, decoded) => {
     if (err) return res.status(401).end();
-    const args = decoded?.inArguments?.[0];
-    if (!args) return res.status(200).json({ branchResult: "failed" });
-    const smsPayload = {
-      telefono: args.telefono || args.phone,
-      texto: args.texto || args.message,
-      fechaEnvio: args.fechaEnvio || args.scheduledDate,
-      campanyaReferencia: process.env.BITMESSAGE_CAMPANYA || "SOIB",
-    };
-    const result = await sendScheduledSMS(smsPayload);
-    res
-      .status(200)
-      .json({ branchResult: result.success ? "scheduled" : "failed" });
+    const inArgs = decoded?.inArguments;
+    if (!inArgs || inArgs.length === 0) return res.status(200).json({ branchResult: "failed" });
+    
+    // Check if inArguments is an array of SMS objects (multiple SMS)
+    const isMultipleSMS = inArgs.every(arg => 
+      arg && (arg.telefono || arg.phone) && (arg.texto || arg.message)
+    );
+    
+    if (isMultipleSMS && inArgs.length > 1) {
+      // Multiple SMS: create array and use sendScheduledSMSFile
+      const smsArray = inArgs.map(arg => {
+        const smsObj = {
+          telefono: arg.telefono || arg.phone,
+          texto: arg.texto || arg.message,
+          campanyaReferencia: arg.campanya || arg.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA || "SOIB",
+        };
+        if (arg.fechaEnvio || arg.scheduledDate) {
+          smsObj.fechaEnvio = arg.fechaEnvio || arg.scheduledDate;
+        }
+        return smsObj;
+      });
+      
+      const campanya = smsArray[0].campanyaReferencia;
+      const result = await sendScheduledSMSFile(smsArray, campanya);
+      return res.status(200).json({ branchResult: result.success ? "scheduled" : "failed" });
+    } else {
+      // Single SMS: use sendScheduledSMS
+      const args = inArgs[0];
+      const smsPayload = {
+        telefono: args.telefono || args.phone,
+        texto: args.texto || args.message,
+        campanyaReferencia: args.campanya || args.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA || "SOIB",
+      };
+      
+      // Add fechaEnvio only if provided
+      if (args.fechaEnvio || args.scheduledDate) {
+        smsPayload.fechaEnvio = args.fechaEnvio || args.scheduledDate;
+      }
+      
+      const result = await sendScheduledSMS(smsPayload);
+      return res.status(200).json({ branchResult: result.success ? "scheduled" : "failed" });
+    }
   });
 }
 

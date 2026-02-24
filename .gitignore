@@ -6,7 +6,8 @@ bower_components
 public/vendor/salesforce-lightning-design-system/
 .env
 .env.example
-*.pdf
+*public/public/.pdf
+public/tmp/*.txt
 PRESENTATION.md
 MULTIPLE-ACTIVITIES.md
 generate-token.js
