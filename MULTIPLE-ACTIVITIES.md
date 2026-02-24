@@ -59,7 +59,7 @@ Journey Builder automáticamente:
 Journey Builder automáticamente:
 
 - Leerá `public/scheduled-sms/config.json`
-- Mostrará `public/scheduled-sms/index.html` como modal de configuración
+- En esta versión no se usa modal HTML/CSS de configuración para Scheduled SMS
 - Llamará a endpoints `/scheduled-sms/execute`, `/scheduled-sms/save`, etc.
 
 ## ➕ Agregar Nuevas Actividades
