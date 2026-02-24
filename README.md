@@ -1,4 +1,4 @@
-# Journey Builder Activity Template
+# Journey Builder Activity
 
 ### Pre-Requisites
 
