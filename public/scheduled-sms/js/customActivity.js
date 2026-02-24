@@ -82,7 +82,7 @@ define(["postmonger"], function (Postmonger) {
 
     // This logic checks if you had previously configured your activity.
     const hasInArguments = Boolean(
-      payload.arguments?.execute?.inArguments?.length > 0,
+      payload.arguments?.execute?.inArguments?.length,
     );
 
     const inArguments = hasInArguments
