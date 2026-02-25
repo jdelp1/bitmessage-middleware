@@ -3,7 +3,6 @@ bower_components
 *.swp
 *.swo
 *.log
-public/vendor/salesforce-lightning-design-system/
 .env
 .env.example
 *public/public/.pdf
