@@ -18,15 +18,15 @@ function formatSMSLine(obj) {
   if (obj.fechaEnvio) {
     // Parse ISO date to dd/MM/yyyy and HH:mm
     const date = new Date(obj.fechaEnvio);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
     return `${day}/${month}/${year}|${hours}:${minutes}|${obj.telefono}|${obj.texto}`;
   }
-  
+
   // Fallback for instant SMS (no fechaEnvio)
   return Object.values(obj).join("|");
 }
@@ -156,7 +156,7 @@ export async function receiveJsonFile(req, res) {
 async function sendScheduledSMS(payload) {
   try {
     const campanya = payload.campanyaReferencia || "SOIB";
-    
+
     // Generate a single-record file
     const fileName = `scheduled-sms-${Date.now()}.txt`;
     ensureDir(PUBLIC_TMP);
@@ -164,11 +164,8 @@ async function sendScheduledSMS(payload) {
     const filePath = path.join(PUBLIC_TMP, fileName);
     // Write without BOM - BitMessage parser doesn't handle it correctly
     fs.writeFileSync(filePath, content, "utf8");
-    
-    logger.info(
-      { filePath, content },
-      "Single scheduled SMS file generated",
-    );
+
+    logger.info({ filePath, content }, "Single scheduled SMS file generated");
 
     // Upload file as multipart/form-data
     const form = new FormData();
@@ -178,7 +175,7 @@ async function sendScheduledSMS(payload) {
     });
 
     const url = `${process.env.BITMESSAGE_SCHEDULED_SMS_API}?campanya=${encodeURIComponent(campanya)}`;
-    
+
     logger.info(
       { url, campanya, fileName, payload },
       "Calling BitMessage Scheduled SMS API with file",
@@ -226,46 +223,59 @@ export async function execute(req, res) {
   JWT(req.body, process.env.jwtSecret, async (err, decoded) => {
     if (err) return res.status(401).end();
     const inArgs = decoded?.inArguments;
-    if (!inArgs || inArgs.length === 0) return res.status(200).json({ branchResult: "failed" });
-    
+    if (!inArgs || inArgs.length === 0)
+      return res.status(200).json({ branchResult: "failed" });
+
     // Check if inArguments is an array of SMS objects (multiple SMS)
-    const isMultipleSMS = inArgs.every(arg => 
-      arg && (arg.telefono || arg.phone) && (arg.texto || arg.message)
+    const isMultipleSMS = inArgs.every(
+      (arg) => arg && (arg.telefono || arg.phone) && (arg.texto || arg.message),
     );
-    
+
     if (isMultipleSMS && inArgs.length > 1) {
       // Multiple SMS: create array and use sendScheduledSMSFile
-      const smsArray = inArgs.map(arg => {
+      const smsArray = inArgs.map((arg) => {
         const smsObj = {
           telefono: arg.telefono || arg.phone,
           texto: arg.texto || arg.message,
-          campanyaReferencia: arg.campanya || arg.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA || "SOIB",
+          campanyaReferencia:
+            arg.campanya ||
+            arg.campanyaReferencia ||
+            process.env.BITMESSAGE_CAMPANYA ||
+            "SOIB",
         };
         if (arg.fechaEnvio || arg.scheduledDate) {
           smsObj.fechaEnvio = arg.fechaEnvio || arg.scheduledDate;
         }
         return smsObj;
       });
-      
+
       const campanya = smsArray[0].campanyaReferencia;
       const result = await sendScheduledSMSFile(smsArray, campanya);
-      return res.status(200).json({ branchResult: result.success ? "scheduled" : "failed" });
+      return res
+        .status(200)
+        .json({ branchResult: result.success ? "scheduled" : "failed" });
     } else {
       // Single SMS: use sendScheduledSMS
       const args = inArgs[0];
       const smsPayload = {
         telefono: args.telefono || args.phone,
         texto: args.texto || args.message,
-        campanyaReferencia: args.campanya || args.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA || "SOIB",
+        campanyaReferencia:
+          args.campanya ||
+          args.campanyaReferencia ||
+          process.env.BITMESSAGE_CAMPANYA ||
+          "SOIB",
       };
-      
+
       // Add fechaEnvio only if provided
       if (args.fechaEnvio || args.scheduledDate) {
         smsPayload.fechaEnvio = args.fechaEnvio || args.scheduledDate;
       }
-      
+
       const result = await sendScheduledSMS(smsPayload);
-      return res.status(200).json({ branchResult: result.success ? "scheduled" : "failed" });
+      return res
+        .status(200)
+        .json({ branchResult: result.success ? "scheduled" : "failed" });
     }
   });
 }

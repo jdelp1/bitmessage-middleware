@@ -14,19 +14,20 @@ async function sendBitMessageSMS(payload) {
     const params = new URLSearchParams({
       telefono: payload.telefono || payload.numero,
       texto: payload.texto || payload.message,
-      campanyaReferencia: payload.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA,
+      campanyaReferencia:
+        payload.campanyaReferencia || process.env.BITMESSAGE_CAMPANYA,
     });
-    
+
     // Replace + with %20 for spaces (BitMessage API requirement)
-    const url = `${process.env.BITMESSAGE_INSTANT_SMS_API}?${params.toString().replace(/\+/g, '%20')}`;
+    const url = `${process.env.BITMESSAGE_INSTANT_SMS_API}?${params.toString().replace(/\+/g, "%20")}`;
 
     logger.info(
       {
         fullUrl: url,
         params: {
-          telefono: params.get('telefono'),
-          texto: params.get('texto'),
-          campanyaReferencia: params.get('campanyaReferencia'),
+          telefono: params.get("telefono"),
+          texto: params.get("texto"),
+          campanyaReferencia: params.get("campanyaReferencia"),
         },
       },
       "Calling BitMessage Instant SMS API with details",
@@ -49,10 +50,7 @@ async function sendBitMessageSMS(payload) {
 
     // Check response for success (adjust based on actual API response)
     if (response.status === 200) {
-      logger.info(
-        { response: response.data },
-        "Instant SMS sent successfully",
-      );
+      logger.info({ response: response.data }, "Instant SMS sent successfully");
       return { success: true, data: response.data };
     } else {
       logger.warn(
