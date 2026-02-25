@@ -127,7 +127,7 @@ export async function publish(req, res) {
     { endpoint: "/instant-sms/publish", body: req.body },
     "Instant SMS Publish event received",
   );
-  res.send(200, "Publish");
+  res.status(200).send("Publish");
 }
 
 /*
@@ -138,7 +138,7 @@ export async function validate(req, res) {
     { endpoint: "/instant-sms/validate", body: req.body },
     "Instant SMS Validate event received",
   );
-  res.send(200, "Validate");
+  res.status(200).send("Validate");
 }
 
 /*
@@ -149,7 +149,7 @@ export async function edit(req, res) {
     { endpoint: "/instant-sms/edit", body: req.body },
     "Instant SMS Edit event received",
   );
-  res.send(200, "Edit");
+  res.status(200).send("Edit");
 }
 
 /*
@@ -160,7 +160,7 @@ export async function save(req, res) {
     { endpoint: "/instant-sms/save", body: req.body },
     "Instant SMS Save event received",
   );
-  res.send(200, "Save");
+  res.status(200).send("Save");
 }
 
 /*
@@ -171,5 +171,5 @@ export async function stop(req, res) {
     { endpoint: "/instant-sms/stop", body: req.body },
     "Instant SMS Stop event received",
   );
-  res.send(200, "Stop");
+  res.status(200).send("Stop");
 }

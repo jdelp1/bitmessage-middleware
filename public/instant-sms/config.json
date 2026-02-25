@@ -50,7 +50,7 @@
       "useJwt": true
     },
     "edit": {
-      "url": "https://site--custom-activity--974pyfp922mc.code.run/edit",
+      "url": "https://site--custom-activity--974pyfp922mc.code.run/instant-sms/edit",
       "verb": "POST",
       "useJwt": true
     }

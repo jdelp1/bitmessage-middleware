@@ -287,7 +287,9 @@ function simpleHandler(endpoint) {
       { endpoint, body: req.body },
       `Scheduled SMS ${endpoint} event received`,
     );
-    res.send(200, endpoint.charAt(0).toUpperCase() + endpoint.slice(1));
+    res
+      .status(200)
+      .send(endpoint.charAt(0).toUpperCase() + endpoint.slice(1));
   };
 }
 
